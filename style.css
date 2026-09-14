@@ -1,0 +1,1340 @@
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background: #080b16;
+
+    color: white;
+
+    overflow-x: hidden;
+
+}
+
+
+.background {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0, 255, 255, 0.13),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(130, 70, 255, 0.17),
+            transparent 30%
+        ),
+
+        #080b16;
+
+    z-index: -1;
+
+}
+
+
+.game-container {
+
+    width: min(1250px, 96%);
+
+    min-height: 720px;
+
+    margin: 30px auto;
+
+    background:
+        rgba(15, 20, 38, 0.96);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,0.55);
+
+    padding: 30px;
+
+}
+
+
+.screen {
+
+    display: none;
+
+}
+
+
+.screen.active {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+
+/* =========================================================
+   START SCREEN
+   ========================================================= */
+
+#start-screen {
+
+    min-height: 650px;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+
+.logo {
+
+    width: 90px;
+
+    height: 90px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 45px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00eaff,
+            #7657ff
+        );
+
+    box-shadow:
+        0 0 35px
+        rgba(0,234,255,0.3);
+
+    margin-bottom: 25px;
+
+}
+
+
+.small-logo {
+
+    width: 65px;
+
+    height: 65px;
+
+    font-size: 32px;
+
+}
+
+
+h1 {
+
+    font-size:
+        clamp(38px, 7vw, 65px);
+
+    letter-spacing: 4px;
+
+    font-weight: 800;
+
+}
+
+
+h1 span {
+
+    color: #00eaff;
+
+}
+
+
+.subtitle {
+
+    margin-top: 8px;
+
+    color: #9da6c2;
+
+    font-size: 18px;
+
+}
+
+
+.intro-card {
+
+    margin: 40px 0;
+
+    width: 100%;
+
+    max-width: 750px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 12px;
+
+}
+
+
+.intro-card div {
+
+    padding: 18px 8px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    color: #dce3f7;
+
+}
+
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.main-btn {
+
+    border: none;
+
+    padding: 18px 45px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00d9ff,
+            #6655ff
+        );
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,217,255,0.2);
+
+}
+
+
+.main-btn:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 15px 35px
+        rgba(0,217,255,0.35);
+
+}
+
+
+.secondary-btn {
+
+    margin-top: 15px;
+
+    border:
+        1px solid #303750;
+
+    padding: 13px 30px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    color: #dce3f7;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+}
+
+
+
+/* =========================================================
+   PHONE SCREEN
+   ========================================================= */
+
+#phone-screen {
+
+    min-height: 650px;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+
+.phone-header {
+
+    margin-bottom: 30px;
+
+}
+
+
+.phone-header h2 {
+
+    font-size: 35px;
+
+    letter-spacing: 2px;
+
+}
+
+
+.phone-header p {
+
+    color: #8993ad;
+
+    margin-top: 8px;
+
+}
+
+
+.join-card {
+
+    width: min(450px,100%);
+
+    background:
+        rgba(255,255,255,0.045);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+}
+
+
+.join-card label {
+
+    display: block;
+
+    text-align: left;
+
+    color: #8993ad;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    margin:
+        15px 0 7px;
+
+}
+
+
+.join-card input,
+.join-card select {
+
+    width: 100%;
+
+    padding: 15px;
+
+    border:
+        1px solid #303750;
+
+    border-radius: 10px;
+
+    background: #11172a;
+
+    color: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+
+.join-card input:focus,
+.join-card select:focus {
+
+    border-color: #00eaff;
+
+}
+
+
+.join-card .main-btn {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+}
+
+
+.connection-status {
+
+    margin-top: 15px;
+
+    color: #8993ad;
+
+}
+
+
+.phone-buzzer-area {
+
+    display: none;
+
+    margin-top: 30px;
+
+}
+
+
+.phone-buzzer-area.connected {
+
+    display: block;
+
+}
+
+
+.phone-team-name {
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    color: #00eaff;
+
+    margin-bottom: 15px;
+
+}
+
+
+.big-buzz-btn {
+
+    width: 250px;
+
+    height: 250px;
+
+    border-radius: 50%;
+
+    border: 10px solid
+        rgba(255,255,255,0.1);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff5363,
+            #8d1734
+        );
+
+    color: white;
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 50px
+        rgba(255,83,99,0.35);
+
+    transition: 0.12s;
+
+}
+
+
+.big-buzz-btn:active:not(:disabled) {
+
+    transform: scale(0.94);
+
+}
+
+
+.big-buzz-btn:disabled {
+
+    opacity: 0.35;
+
+    cursor: not-allowed;
+
+}
+
+
+#phone-buzz-status {
+
+    margin-top: 20px;
+
+    color: #8993ad;
+
+}
+
+
+
+/* =========================================================
+   HOST HEADER
+   ========================================================= */
+
+.host-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.host-label {
+
+    color: #00eaff;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    font-size: 13px;
+
+}
+
+
+.host-question-number {
+
+    margin-top: 5px;
+
+    color: #9da6c2;
+
+}
+
+
+.host-id-box {
+
+    padding: 12px 18px;
+
+    background:
+        rgba(0,234,255,0.08);
+
+    border:
+        1px solid
+        rgba(0,234,255,0.25);
+
+    border-radius: 10px;
+
+    color: #8993ad;
+
+    font-size: 12px;
+
+}
+
+
+.host-id-box strong {
+
+    color: #00eaff;
+
+    font-size: 15px;
+
+}
+
+
+
+/* =========================================================
+   TEAM SCOREBOARD
+   ========================================================= */
+
+.team-scoreboard {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 12px;
+
+    margin-top: 22px;
+
+}
+
+
+.team-card {
+
+    padding: 15px;
+
+    text-align: center;
+
+    background:
+        rgba(255,255,255,0.045);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    border-radius: 15px;
+
+    transition: 0.2s;
+
+}
+
+
+.team-card.buzzed {
+
+    border-color: #00eaff;
+
+    box-shadow:
+        0 0 25px
+        rgba(0,234,255,0.25);
+
+    transform:
+        translateY(-3px);
+
+}
+
+
+.team-title {
+
+    color: #dce3f7;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+}
+
+
+.team-hearts {
+
+    margin: 7px 0;
+
+    font-size: 18px;
+
+}
+
+
+.team-score {
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    color: #00eaff;
+
+}
+
+
+.points-label {
+
+    color: #66718c;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+.timer-section {
+
+    text-align: center;
+
+    margin: 18px 0;
+
+}
+
+
+.timer-circle {
+
+    width: 85px;
+
+    height: 85px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    border:
+        5px solid #00eaff;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    box-shadow:
+        0 0 25px
+        rgba(0,234,255,0.2);
+
+}
+
+
+.timer-circle span {
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+}
+
+
+.timer-circle.warning {
+
+    border-color: #ff5363;
+
+    box-shadow:
+        0 0 30px
+        rgba(255,83,99,0.4);
+
+}
+
+
+.timer-status {
+
+    margin-top: 7px;
+
+    font-size: 11px;
+
+    color: #8993ad;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+/* =========================================================
+   HOST CONTROLS
+   ========================================================= */
+
+.host-controls {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.control-btn {
+
+    padding: 11px 16px;
+
+    border:
+        1px solid #303750;
+
+    border-radius: 9px;
+
+    background:
+        #171d31;
+
+    color: #dce3f7;
+
+    cursor: pointer;
+
+    font-weight: 800;
+
+    font-size: 12px;
+
+}
+
+
+.control-btn:hover {
+
+    border-color: #00eaff;
+
+}
+
+
+.start-control {
+
+    background:
+        rgba(0,220,140,0.15);
+
+    border-color:
+        rgba(0,220,140,0.4);
+
+}
+
+
+.danger-control {
+
+    background:
+        rgba(255,83,99,0.12);
+
+    border-color:
+        rgba(255,83,99,0.4);
+
+}
+
+
+
+/* =========================================================
+   BUZZ STATUS
+   ========================================================= */
+
+.buzz-status {
+
+    text-align: center;
+
+    min-height: 35px;
+
+    padding: 9px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.035);
+
+    color: #8993ad;
+
+    font-weight: 800;
+
+}
+
+
+.buzz-status.active {
+
+    color: #00eaff;
+
+    background:
+        rgba(0,234,255,0.08);
+
+    border:
+        1px solid
+        rgba(0,234,255,0.2);
+
+}
+
+
+
+/* =========================================================
+   QUESTION CARD
+   ========================================================= */
+
+.question-card {
+
+    background:
+        rgba(255,255,255,0.035);
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    text-align: center;
+
+}
+
+
+.category {
+
+    color: #00eaff;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 12px;
+
+}
+
+
+#question {
+
+    font-size:
+        clamp(21px,3vw,30px);
+
+    line-height: 1.35;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+/* =========================================================
+   ANSWERS
+   ========================================================= */
+
+.answers {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+}
+
+
+.answer-btn {
+
+    padding: 16px;
+
+    border:
+        1px solid #303750;
+
+    background: #171d31;
+
+    color: #e9edfa;
+
+    border-radius: 12px;
+
+    text-align: left;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.answer-btn:hover:not(:disabled) {
+
+    border-color: #00eaff;
+
+}
+
+
+.answer-btn.correct {
+
+    background:
+        rgba(30,200,100,0.2);
+
+    border-color: #22d878;
+
+    color: #61f5a0;
+
+}
+
+
+.answer-btn.wrong {
+
+    background:
+        rgba(240,60,75,0.2);
+
+    border-color: #ff5363;
+
+    color: #ff7b88;
+
+}
+
+
+.answer-btn:disabled {
+
+    cursor: default;
+
+}
+
+
+
+/* =========================================================
+   FEEDBACK
+   ========================================================= */
+
+.feedback {
+
+    min-height: 30px;
+
+    margin-top: 12px;
+
+    font-weight: 900;
+
+    font-size: 16px;
+
+}
+
+
+.correct-text {
+
+    color: #52ed91;
+
+}
+
+
+.wrong-text {
+
+    color: #ff6575;
+
+}
+
+
+
+/* =========================================================
+   NEXT BUTTON
+   ========================================================= */
+
+.next-btn {
+
+    display: none;
+
+    margin:
+        15px auto 0;
+
+    border: none;
+
+    padding:
+        13px 25px;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #101426;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+}
+
+
+
+/* =========================================================
+   SOUNDBOARD
+   ========================================================= */
+
+.soundboard {
+
+    margin-top: 20px;
+
+    padding: 18px;
+
+    background:
+        rgba(255,255,255,0.035);
+
+    border-radius: 15px;
+
+}
+
+
+.soundboard-title {
+
+    text-align: center;
+
+    color: #ffd83d;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.sound-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 8px;
+
+}
+
+
+.meme-btn {
+
+    padding: 12px 8px;
+
+    border:
+        1px solid #3b4260;
+
+    border-radius: 9px;
+
+    background:
+        #171d31;
+
+    color: white;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+
+}
+
+
+.meme-btn span {
+
+    color: #ffd83d;
+
+    margin-right: 5px;
+
+}
+
+
+.meme-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color: #ffd83d;
+
+    background: #202740;
+
+}
+
+
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
+
+#result-screen {
+
+    min-height: 650px;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+
+.result-icon {
+
+    font-size: 75px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.result-text {
+
+    color: #8993ad;
+
+    margin-top: 15px;
+
+    font-size: 18px;
+
+}
+
+
+.winner-display {
+
+    margin: 25px;
+
+    font-size: 35px;
+
+    font-weight: 900;
+
+    color: #00eaff;
+
+}
+
+
+.final-team-results {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 12px;
+
+    width: 100%;
+
+    max-width: 800px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.final-team-results div {
+
+    padding: 18px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border-radius: 12px;
+
+    color: #aab3ca;
+
+}
+
+
+.final-team-results strong {
+
+    display: block;
+
+    color: #00eaff;
+
+    font-size: 30px;
+
+    margin-top: 5px;
+
+}
+
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .game-container {
+
+        width: 96%;
+
+        padding: 18px;
+
+        margin: 10px auto;
+
+    }
+
+
+    .team-scoreboard {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .sound-buttons {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .final-team-results {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .host-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        text-align: center;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .intro-card {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .answers {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .team-scoreboard {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .host-controls {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .sound-buttons {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+}

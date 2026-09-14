@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>STEM Tech Challenge</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="background"></div>
+
+
+    <main class="game-container">
+
+
+        <!-- =====================================================
+             START SCREEN
+             ===================================================== -->
+
+        <section id="start-screen" class="screen active">
+
+            <div class="logo">
+                ⚡
+            </div>
+
+            <h1>
+                TECH <span>CHALLENGE</span>
+            </h1>
+
+            <p class="subtitle">
+                ICT & Computer Science STEM Quiz
+            </p>
+
+
+            <div class="intro-card">
+
+                <div>
+                    🧠 15 Questions
+                </div>
+
+                <div>
+                    ⏱️ 15 Seconds
+                </div>
+
+                <div>
+                    ❤️ 3 Hearts
+                </div>
+
+                <div>
+                    🏆 Team Battle
+                </div>
+
+            </div>
+
+
+            <button
+                id="start-btn"
+                class="main-btn"
+            >
+                START HOST GAME
+            </button>
+
+
+            <button
+                id="phone-mode-btn"
+                class="secondary-btn"
+            >
+                📱 JOIN AS TEAM
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             PHONE JOIN SCREEN
+             ===================================================== -->
+
+        <section
+            id="phone-screen"
+            class="screen"
+        >
+
+            <div class="phone-header">
+
+                <div class="logo small-logo">
+                    📱
+                </div>
+
+                <h2>
+                    TEAM BUZZER
+                </h2>
+
+                <p>
+                    Connect your phone to the host
+                </p>
+
+            </div>
+
+
+            <div class="join-card">
+
+                <label>
+                    HOST ID
+                </label>
+
+                <input
+                    id="host-id-input"
+                    type="text"
+                    placeholder="Enter Host ID"
+                    autocomplete="off"
+                >
+
+
+                <label>
+                    SELECT TEAM
+                </label>
+
+                <select id="team-select">
+
+                    <option value="team1">
+                        TEAM 1
+                    </option>
+
+                    <option value="team2">
+                        TEAM 2
+                    </option>
+
+                    <option value="team3">
+                        TEAM 3
+                    </option>
+
+                    <option value="team4">
+                        TEAM 4
+                    </option>
+
+                </select>
+
+
+                <button
+                    id="join-btn"
+                    class="main-btn"
+                >
+                    CONNECT PHONE
+                </button>
+
+
+                <div
+                    id="phone-status"
+                    class="connection-status"
+                >
+                    Not connected
+                </div>
+
+            </div>
+
+
+            <div
+                id="phone-buzzer-area"
+                class="phone-buzzer-area"
+            >
+
+                <div
+                    id="phone-team-name"
+                    class="phone-team-name"
+                >
+                    TEAM
+                </div>
+
+                <button
+                    id="phone-buzz-btn"
+                    class="big-buzz-btn"
+                    disabled
+                >
+                    BUZZ!
+                </button>
+
+                <p id="phone-buzz-status">
+                    Connect to host first
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             HOST GAME SCREEN
+             ===================================================== -->
+
+        <section
+            id="quiz-screen"
+            class="screen"
+        >
+
+
+            <!-- HOST HEADER -->
+
+            <header class="host-header">
+
+                <div>
+
+                    <div class="host-label">
+                        STEM TECH CHALLENGE
+                    </div>
+
+                    <div class="host-question-number">
+
+                        QUESTION
+
+                        <span id="question-number">
+                            1
+                        </span>
+
+                        /15
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="host-id-display"
+                    class="host-id-box"
+                >
+
+                    HOST ID:
+                    <strong id="host-id">
+                        CONNECTING...
+                    </strong>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+                 TEAM SCOREBOARD
+                 ================================================= -->
+
+            <div class="team-scoreboard">
+
+
+                <div
+                    class="team-card"
+                    id="team1-card"
+                >
+
+                    <div class="team-title">
+                        TEAM 1
+                    </div>
+
+                    <div
+                        id="team1-lives"
+                        class="team-hearts"
+                    >
+                        ❤️❤️❤️
+                    </div>
+
+                    <div
+                        id="team1-score"
+                        class="team-score"
+                    >
+                        0
+                    </div>
+
+                    <div class="points-label">
+                        POINTS
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="team-card"
+                    id="team2-card"
+                >
+
+                    <div class="team-title">
+                        TEAM 2
+                    </div>
+
+                    <div
+                        id="team2-lives"
+                        class="team-hearts"
+                    >
+                        ❤️❤️❤️
+                    </div>
+
+                    <div
+                        id="team2-score"
+                        class="team-score"
+                    >
+                        0
+                    </div>
+
+                    <div class="points-label">
+                        POINTS
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="team-card"
+                    id="team3-card"
+                >
+
+                    <div class="team-title">
+                        TEAM 3
+                    </div>
+
+                    <div
+                        id="team3-lives"
+                        class="team-hearts"
+                    >
+                        ❤️❤️❤️
+                    </div>
+
+                    <div
+                        id="team3-score"
+                        class="team-score"
+                    >
+                        0
+                    </div>
+
+                    <div class="points-label">
+                        POINTS
+                    </div>
+
+                </div>
+
+
+
+                <div
+                    class="team-card"
+                    id="team4-card"
+                >
+
+                    <div class="team-title">
+                        TEAM 4
+                    </div>
+
+                    <div
+                        id="team4-lives"
+                        class="team-hearts"
+                    >
+                        ❤️❤️❤️
+                    </div>
+
+                    <div
+                        id="team4-score"
+                        class="team-score"
+                    >
+                        0
+                    </div>
+
+                    <div class="points-label">
+                        POINTS
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TIMER
+                 ================================================= -->
+
+            <div class="timer-section">
+
+                <div
+                    id="timer-circle"
+                    class="timer-circle"
+                >
+
+                    <span id="timer">
+                        15
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="timer-status"
+                    class="timer-status"
+                >
+                    READY
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 HOST CONTROLS
+                 ================================================= -->
+
+            <div class="host-controls">
+
+                <button
+                    id="start-timer-btn"
+                    class="control-btn start-control"
+                >
+                    ▶ START TIMER
+                </button>
+
+                <button
+                    id="stop-timer-btn"
+                    class="control-btn"
+                >
+                    ⏸ STOP
+                </button>
+
+                <button
+                    id="reset-timer-btn"
+                    class="control-btn"
+                >
+                    ↻ RESET
+                </button>
+
+                <button
+                    id="end-question-btn"
+                    class="control-btn danger-control"
+                >
+                    🔔 END QUESTION
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 BUZZER STATUS
+                 ================================================= -->
+
+            <div
+                id="buzz-status"
+                class="buzz-status"
+            >
+                Waiting for a team to buzz...
+            </div>
+
+
+
+            <!-- =================================================
+                 QUESTION CARD
+                 ================================================= -->
+
+            <div class="question-card">
+
+                <div
+                    id="category"
+                    class="category"
+                >
+                    COMPUTER MEMORY
+                </div>
+
+
+                <h2 id="question">
+                    Question goes here
+                </h2>
+
+
+                <div
+                    id="answers"
+                    class="answers"
+                ></div>
+
+
+                <div
+                    id="feedback"
+                    class="feedback"
+                ></div>
+
+
+                <button
+                    id="next-btn"
+                    class="next-btn"
+                >
+                    NEXT QUESTION →
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MEME SOUNDBOARD
+                 ================================================= -->
+
+            <div class="soundboard">
+
+                <div class="soundboard-title">
+                    ⭐ MEME SOUNDBOARD
+                </div>
+
+
+                <div class="sound-buttons">
+
+                    <button
+                        onclick="playMeme(1)"
+                        class="meme-btn"
+                    >
+                        <span>1</span>
+                        YEET
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(2)"
+                        class="meme-btn"
+                    >
+                        <span>2</span>
+                        FAHHHH
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(3)"
+                        class="meme-btn"
+                    >
+                        <span>3</span>
+                        BRUHHH
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(4)"
+                        class="meme-btn"
+                    >
+                        <span>4</span>
+                        VINE BOOM
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(5)"
+                        class="meme-btn"
+                    >
+                        <span>5</span>
+                        YOOO
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(6)"
+                        class="meme-btn"
+                    >
+                        <span>6</span>
+                        RIZZ
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(7)"
+                        class="meme-btn"
+                    >
+                        <span>7</span>
+                        LET'S GOOO
+                    </button>
+
+
+                    <button
+                        onclick="playMeme(8)"
+                        class="meme-btn"
+                    >
+                        <span>8</span>
+                        7 CROREEEEE
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             RESULT SCREEN
+             ===================================================== -->
+
+        <section
+            id="result-screen"
+            class="screen"
+        >
+
+            <div class="result-icon">
+                🏆
+            </div>
+
+
+            <h1>
+                CHALLENGE COMPLETE!
+            </h1>
+
+
+            <p class="result-text">
+                FINAL RESULTS
+            </p>
+
+
+            <div
+                id="winner-display"
+                class="winner-display"
+            >
+                TEAM 1 WINS!
+            </div>
+
+
+            <div class="final-team-results">
+
+                <div>
+                    TEAM 1:
+                    <strong id="final-team1">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    TEAM 2:
+                    <strong id="final-team2">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    TEAM 3:
+                    <strong id="final-team3">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    TEAM 4:
+                    <strong id="final-team4">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <button
+                id="restart-btn"
+                class="main-btn"
+            >
+                PLAY AGAIN
+            </button>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
