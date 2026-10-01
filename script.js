@@ -3,7 +3,6 @@
    =========================================================
 
    FEATURES:
-
    HOST PASSWORD
    3 ROUNDS
    15 QUESTIONS PER ROUND
@@ -16,7 +15,7 @@
    -1 HEART FOR WRONG ANSWER
    -2 POINTS WHEN NO HEARTS REMAIN
    UNDERTAKER BELL ON TIME END
-   MANUAL MEME SOUNDBOARD
+   16-SOUND MANUAL MEME SOUNDBOARD
 
    ========================================================= */
 
@@ -662,13 +661,9 @@ const round3Questions = [
    ========================================================= */
 
 const roundQuestions = {
-
     1: round1Questions,
-
     2: round2Questions,
-
     3: round3Questions
-
 };
 
 
@@ -742,7 +737,15 @@ let activeTeam = null;
 
 let questionWasPassed = false;
 
-let answerAlreadyScored = false;
+/*
+    NEW:
+    Keeps track of teams that have already attempted
+    the current question.
+
+    This allows multiple different teams to answer
+    the same question after a wrong answer.
+*/
+let attemptedTeams = new Set();
 
 let peer = null;
 
@@ -897,13 +900,10 @@ function showScreen(screen) {
     document
         .querySelectorAll(".screen")
         .forEach(s => {
-
             s.classList.remove("active");
-
         });
 
     screen.classList.add("active");
-
 }
 
 
@@ -922,9 +922,7 @@ startBtn.addEventListener(
         showScreen(passwordScreen);
 
         setTimeout(() => {
-
             passwordInput.focus();
-
         }, 100);
 
     }
@@ -945,12 +943,8 @@ passwordInput.addEventListener(
     "keydown",
     event => {
 
-        if (
-            event.key === "Enter"
-        ) {
-
+        if (event.key === "Enter") {
             checkPassword();
-
         }
 
     }
@@ -962,11 +956,7 @@ function checkPassword() {
     const enteredPassword =
         passwordInput.value;
 
-
-    if (
-        enteredPassword ===
-        HOST_PASSWORD
-    ) {
+    if (enteredPassword === HOST_PASSWORD) {
 
         passwordError.textContent = "";
 
@@ -1029,9 +1019,7 @@ document
             () => {
 
                 const selectedRound =
-                    Number(
-                        button.dataset.round
-                    );
+                    Number(button.dataset.round);
 
                 startSelectedRound(
                     selectedRound
@@ -1047,49 +1035,34 @@ document
    START SELECTED ROUND
    ========================================================= */
 
-function startSelectedRound(
-    roundNumber
-) {
+function startSelectedRound(roundNumber) {
 
-    if (
-        !roundQuestions[roundNumber]
-    ) {
-
+    if (!roundQuestions[roundNumber]) {
         return;
-
     }
-
 
     currentRound =
         roundNumber;
 
-
     questions =
         roundQuestions[currentRound];
-
 
     currentQuestion =
         0;
 
-
     resetRoundScores();
-
 
     gameStarted =
         true;
-
 
     showScreen(
         quizScreen
     );
 
-
     currentRoundDisplay.textContent =
         currentRound;
 
-
     createHostPeer();
-
 
     showQuestion();
 
@@ -1112,7 +1085,6 @@ function resetRoundScores() {
                 STARTING_HEARTS;
 
         });
-
 
     updateScoreboard();
 
@@ -1156,7 +1128,6 @@ function resetTeams() {
 
         });
 
-
     updateScoreboard();
 
 }
@@ -1168,20 +1139,11 @@ function resetTeams() {
 
 function createHostPeer() {
 
-    /*
-        Don't create a second PeerJS host
-        if one already exists.
-    */
-
     if (peer) {
-
         return;
-
     }
 
-
     peer = new Peer();
-
 
     peer.on(
         "open",
@@ -1198,7 +1160,6 @@ function createHostPeer() {
         }
     );
 
-
     peer.on(
         "connection",
         connection => {
@@ -1209,7 +1170,6 @@ function createHostPeer() {
 
         }
     );
-
 
     peer.on(
         "error",
@@ -1230,9 +1190,7 @@ function createHostPeer() {
    SETUP PHONE CONNECTION
    ========================================================= */
 
-function setupTeamConnection(
-    connection
-) {
+function setupTeamConnection(connection) {
 
     connection.on(
         "data",
@@ -1246,7 +1204,6 @@ function setupTeamConnection(
         }
     );
 
-
     connection.on(
         "close",
         () => {
@@ -1255,8 +1212,7 @@ function setupTeamConnection(
                 .forEach(teamKey => {
 
                     if (
-                        teams[teamKey]
-                            .connection ===
+                        teams[teamKey].connection ===
                         connection
                     ) {
 
@@ -1269,7 +1225,6 @@ function setupTeamConnection(
                     }
 
                 });
-
 
             updateScoreboard();
 
@@ -1289,26 +1244,18 @@ function handlePhoneMessage(
 ) {
 
     if (!data) {
-
         return;
-
     }
 
 
     /* PHONE IDENTIFICATION */
 
-    if (
-        data.type ===
-        "identify"
-    ) {
+    if (data.type === "identify") {
 
         const teamKey =
             data.team;
 
-
-        if (
-            !teams[teamKey]
-        ) {
+        if (!teams[teamKey]) {
 
             connection.send({
 
@@ -1323,12 +1270,6 @@ function handlePhoneMessage(
 
         }
 
-
-        /*
-            If another phone is already
-            connected to this team,
-            replace its connection.
-        */
 
         teams[teamKey]
             .connection =
@@ -1353,6 +1294,15 @@ function handlePhoneMessage(
         });
 
 
+        /*
+            Tell the phone whether it is currently
+            allowed to buzz.
+        */
+        sendBuzzAvailability(
+            teamKey,
+            connection
+        );
+
         updateScoreboard();
 
         return;
@@ -1362,10 +1312,7 @@ function handlePhoneMessage(
 
     /* BUZZ */
 
-    if (
-        data.type ===
-        "buzz"
-    ) {
+    if (data.type === "buzz") {
 
         teamBuzz(
             data.team
@@ -1409,25 +1356,14 @@ function connectPhone() {
         "Connecting...";
 
 
-    /*
-        Close previous connection
-        if the phone reconnects.
-    */
-
-    if (
-        window.phonePeer
-    ) {
+    if (window.phonePeer) {
 
         try {
-
             window.phonePeer.destroy();
-
         }
 
         catch (error) {
-
             console.warn(error);
-
         }
 
     }
@@ -1435,7 +1371,6 @@ function connectPhone() {
 
     const phonePeer =
         new Peer();
-
 
     window.phonePeer =
         phonePeer;
@@ -1449,7 +1384,6 @@ function connectPhone() {
                 phonePeer.connect(
                     hostId
                 );
-
 
             window.phoneConnection =
                 connection;
@@ -1509,9 +1443,7 @@ function connectPhone() {
         "error",
         error => {
 
-            console.error(
-                error
-            );
+            console.error(error);
 
             phoneStatus.textContent =
                 "Could not connect to host.";
@@ -1526,14 +1458,9 @@ function connectPhone() {
    PHONE RESPONSE
    ========================================================= */
 
-function handlePhoneResponse(
-    data
-) {
+function handlePhoneResponse(data) {
 
-    if (
-        data.type ===
-        "connected"
-    ) {
+    if (data.type === "connected") {
 
         phoneStatus.textContent =
             "✓ CONNECTED TO HOST";
@@ -1541,19 +1468,15 @@ function handlePhoneResponse(
         phoneStatus.style.color =
             "#52ed91";
 
-
         phoneTeamName.textContent =
             data.name;
-
 
         phoneBuzzArea.classList.add(
             "connected"
         );
 
-
         phoneBuzzBtn.disabled =
             false;
-
 
         phoneBuzzStatus.textContent =
             "WAITING FOR QUESTION...";
@@ -1561,10 +1484,7 @@ function handlePhoneResponse(
     }
 
 
-    if (
-        data.type ===
-        "buzz-result"
-    ) {
+    if (data.type === "buzz-result") {
 
         if (data.accepted) {
 
@@ -1586,10 +1506,37 @@ function handlePhoneResponse(
     }
 
 
-    if (
-        data.type ===
-        "question-ended"
-    ) {
+    /*
+        NEW:
+        The host has reopened the buzzer after
+        another team answered incorrectly.
+    */
+    if (data.type === "buzz-open") {
+
+        if (data.allowed) {
+
+            phoneBuzzBtn.disabled =
+                false;
+
+            phoneBuzzStatus.textContent =
+                "BUZZ NOW!";
+
+        }
+
+        else {
+
+            phoneBuzzBtn.disabled =
+                true;
+
+            phoneBuzzStatus.textContent =
+                "You already answered this question.";
+
+        }
+
+    }
+
+
+    if (data.type === "question-ended") {
 
         phoneBuzzBtn.disabled =
             true;
@@ -1600,10 +1547,7 @@ function handlePhoneResponse(
     }
 
 
-    if (
-        data.type ===
-        "new-question"
-    ) {
+    if (data.type === "new-question") {
 
         phoneBuzzBtn.disabled =
             false;
@@ -1627,21 +1571,13 @@ phoneBuzzBtn.addEventListener(
         const selectedTeam =
             teamSelect.value;
 
-
-        if (
-            !window.phoneConnection
-        ) {
-
+        if (!window.phoneConnection) {
             return;
-
         }
 
+        if (window.phoneConnection.open) {
 
-        if (
-            window.phoneConnection.open
-        ) {
-
-            window.phoneConnection.send({
+            phoneConnection.send({
 
                 type:
                     "buzz",
@@ -1661,25 +1597,32 @@ phoneBuzzBtn.addEventListener(
    TEAM BUZZER
    ========================================================= */
 
-function teamBuzz(
-    teamKey
-) {
+function teamBuzz(teamKey) {
 
     if (!gameStarted) {
-
         return;
-
     }
-
 
     if (questionEnded) {
-
         return;
+    }
 
+    if (!teams[teamKey]) {
+        return;
     }
 
 
-    if (!teams[teamKey]) {
+    /*
+        NEW:
+        A team that has already answered incorrectly
+        cannot buzz again on the same question.
+    */
+    if (attemptedTeams.has(teamKey)) {
+
+        sendBuzzResult(
+            teamKey,
+            false
+        );
 
         return;
 
@@ -1687,12 +1630,9 @@ function teamBuzz(
 
 
     /*
-        FIRST TEAM ONLY
+        Only one team can have control at a time.
     */
-
-    if (
-        activeTeam !== null
-    ) {
+    if (activeTeam !== null) {
 
         sendBuzzResult(
             teamKey,
@@ -1709,12 +1649,9 @@ function teamBuzz(
 
 
     /*
-        The first team buzz
-        stops the timer.
+        First team to buzz stops the timer.
     */
-
     stopTimer();
-
 
     questionWasPassed =
         false;
@@ -1757,20 +1694,13 @@ function sendBuzzResult(
 ) {
 
     const connection =
-        teams[teamKey]
-            ?.connection;
-
+        teams[teamKey]?.connection;
 
     if (!connection) {
-
         return;
-
     }
 
-
-    if (
-        connection.open
-    ) {
+    if (connection.open) {
 
         connection.send({
 
@@ -1788,7 +1718,7 @@ function sendBuzzResult(
 
 
 /* =========================================================
-   NOTIFY PHONES
+   NOTIFY PHONES BUZZ CLOSED
    ========================================================= */
 
 function notifyPhonesBuzzClosed() {
@@ -1797,9 +1727,7 @@ function notifyPhonesBuzzClosed() {
         .forEach(teamKey => {
 
             const connection =
-                teams[teamKey]
-                    .connection;
-
+                teams[teamKey].connection;
 
             if (
                 connection &&
@@ -1812,8 +1740,7 @@ function notifyPhonesBuzzClosed() {
                         "buzz-result",
 
                     accepted:
-                        teamKey ===
-                        activeTeam
+                        teamKey === activeTeam
 
                 });
 
@@ -1825,12 +1752,104 @@ function notifyPhonesBuzzClosed() {
 
 
 /* =========================================================
+   OPEN BUZZER FOR OTHER TEAMS
+   ========================================================= */
+
+function notifyPhonesBuzzOpen() {
+
+    Object.keys(teams)
+        .forEach(teamKey => {
+
+            const connection =
+                teams[teamKey].connection;
+
+            if (
+                connection &&
+                connection.open
+            ) {
+
+                connection.send({
+
+                    type:
+                        "buzz-open",
+
+                    allowed:
+                        !attemptedTeams.has(teamKey)
+
+                });
+
+            }
+
+        });
+
+}
+
+
+/* =========================================================
+   SEND CURRENT BUZZ AVAILABILITY
+   ========================================================= */
+
+function sendBuzzAvailability(
+    teamKey,
+    connection
+) {
+
+    if (!connection || !connection.open) {
+        return;
+    }
+
+
+    if (
+        questionEnded ||
+        !gameStarted
+    ) {
+
+        connection.send({
+
+            type:
+                "question-ended"
+
+        });
+
+        return;
+
+    }
+
+
+    if (
+        attemptedTeams.has(teamKey)
+    ) {
+
+        connection.send({
+
+            type:
+                "buzz-open",
+
+            allowed:
+                false
+
+        });
+
+        return;
+
+    }
+
+
+    connection.send({
+
+        type:
+            "new-question"
+
+    });
+
+}
+
+
+/* =========================================================
    HIGHLIGHT BUZZED TEAM
    ========================================================= */
 
-function highlightBuzzedTeam(
-    teamKey
-) {
+function highlightBuzzedTeam(teamKey) {
 
     document
         .querySelectorAll(".team-card")
@@ -1877,8 +1896,14 @@ function showQuestion() {
     questionWasPassed =
         false;
 
-    answerAlreadyScored =
-        false;
+
+    /*
+        NEW:
+        Reset the list of teams that have attempted
+        the new question.
+    */
+    attemptedTeams =
+        new Set();
 
 
     document
@@ -1894,7 +1919,6 @@ function showQuestion() {
 
     buzzStatus.textContent =
         "Waiting for a team to buzz...";
-
 
     buzzStatus.classList.remove(
         "active"
@@ -1938,7 +1962,7 @@ function showQuestion() {
 
 
     q.answers.forEach(
-        (answer,index) => {
+        (answer, index) => {
 
             const button =
                 document.createElement(
@@ -1962,21 +1986,7 @@ function showQuestion() {
                 "click",
                 () => {
 
-                    /*
-                        Answers can be clicked
-                        while the question is active.
-
-                        The first answer selected
-                        determines the score.
-
-                        Later clicks only show
-                        the correct/wrong color
-                        and do not change the score.
-                    */
-
-                    if (
-                        !activeTeam
-                    ) {
+                    if (!activeTeam) {
 
                         feedbackElement.textContent =
                             "⚠️ A team must buzz first.";
@@ -2022,12 +2032,22 @@ function markAnswer(
     teamKey
 ) {
 
-    if (
-        questionEnded
-    ) {
-
+    if (questionEnded) {
         return;
+    }
 
+
+    if (!teamKey || !teams[teamKey]) {
+        return;
+    }
+
+
+    /*
+        A team that has already answered cannot
+        answer again.
+    */
+    if (attemptedTeams.has(teamKey)) {
+        return;
     }
 
 
@@ -2042,8 +2062,16 @@ function markAnswer(
 
 
     /*
-        Immediately show selected
-        answer as green or red.
+        Mark this team as having attempted
+        the current question.
+    */
+    attemptedTeams.add(
+        teamKey
+    );
+
+
+    /*
+        CORRECT ANSWER
     */
 
     if (
@@ -2056,65 +2084,11 @@ function markAnswer(
                 "correct"
             );
 
-    }
-
-    else {
-
-        buttons[selectedIndex]
-            .classList.add(
-                "wrong"
-            );
-
-        buttons[q.correct]
-            .classList.add(
-                "correct"
-            );
-
-    }
-
-
-    /*
-        Score only once.
-    */
-
-    if (
-        answerAlreadyScored
-    ) {
-
-        feedbackElement.textContent =
-            selectedIndex === q.correct
-                ? "✓ Correct answer."
-                : "✗ Wrong answer.";
-
-        feedbackElement.className =
-            selectedIndex === q.correct
-                ? "feedback correct-text"
-                : "feedback wrong-text";
-
-        return;
-
-    }
-
-
-    answerAlreadyScored =
-        true;
-
-
-    /*
-        CORRECT
-    */
-
-    if (
-        selectedIndex ===
-        q.correct
-    ) {
 
         let points;
 
 
-        if (
-            questionWasPassed
-        ) {
+        if (questionWasPassed) {
 
             points =
                 CORRECT_AFTER_TIME;
@@ -2129,17 +2103,11 @@ function markAnswer(
         }
 
 
-        if (
-            teamKey &&
-            teams[teamKey]
-        ) {
+        teams[teamKey].score +=
+            points;
 
-            teams[teamKey].score +=
-                points;
 
-            updateScoreboard();
-
-        }
+        updateScoreboard();
 
 
         feedbackElement.textContent =
@@ -2153,69 +2121,165 @@ function markAnswer(
         feedbackElement.className =
             "feedback correct-text";
 
+
+        /*
+            Correct answer ends the question.
+        */
+        questionEnded =
+            true;
+
+
+        stopTimer();
+
+        disableAnswers();
+
+        highlightCorrectAnswer();
+
+        notifyPhonesQuestionEnded();
+
+
+        nextBtn.style.display =
+            "block";
+
+
+        nextBtn.textContent =
+            currentQuestion ===
+            questions.length - 1
+                ? "FINISH ROUND →"
+                : "NEXT QUESTION →";
+
+
+        return;
+
     }
 
 
     /*
-        WRONG
+        WRONG ANSWER
     */
+
+    buttons[selectedIndex]
+        .classList.add(
+            "wrong"
+        );
+
+
+    /*
+        Show the correct answer only after
+        the question is finally ended.
+        This lets other teams continue trying.
+    */
+
+
+    const team =
+        teams[teamKey];
+
+
+    if (team.hearts > 0) {
+
+        team.hearts -=
+            WRONG_HEART_PENALTY;
+
+
+        feedbackElement.textContent =
+            "✗ WRONG! " +
+            team.name +
+            " loses ❤️";
+
+    }
 
     else {
 
-        if (
-            teamKey &&
-            teams[teamKey]
-        ) {
-
-            const team =
-                teams[teamKey];
+        team.score -=
+            WRONG_NO_HEART_PENALTY;
 
 
-            if (
-                team.hearts > 0
-            ) {
+        feedbackElement.textContent =
+            "✗ WRONG! " +
+            team.name +
+            " loses -" +
+            WRONG_NO_HEART_PENALTY +
+            " POINTS";
 
-                team.hearts -=
-                    WRONG_HEART_PENALTY;
-
-
-                feedbackElement.textContent =
-                    "✗ WRONG! " +
-                    team.name +
-                    " loses ❤️";
-
-            }
-
-            else {
-
-                team.score -=
-                    WRONG_NO_HEART_PENALTY;
+    }
 
 
-                feedbackElement.textContent =
-                    "✗ WRONG! " +
-                    team.name +
-                    " loses -" +
-                    WRONG_NO_HEART_PENALTY +
-                    " POINTS";
-
-            }
+    updateScoreboard();
 
 
-            updateScoreboard();
-
-        }
-
-        else {
-
-            feedbackElement.textContent =
-                "✗ WRONG!";
-
-        }
+    feedbackElement.className =
+        "feedback wrong-text";
 
 
-        feedbackElement.className =
-            "feedback wrong-text";
+    /*
+        IMPORTANT:
+        Give the other teams another chance.
+    */
+    activeTeam =
+        null;
+
+
+    document
+        .querySelectorAll(".team-card")
+        .forEach(card => {
+
+            card.classList.remove(
+                "buzzed"
+            );
+
+        });
+
+
+    buzzStatus.textContent =
+        "⚡ WRONG ANSWER — OTHER TEAMS CAN BUZZ!";
+
+
+    buzzStatus.classList.add(
+        "active"
+    );
+
+
+    /*
+        Re-open buzzers for teams that have
+        not attempted the question.
+    */
+    notifyPhonesBuzzOpen();
+
+
+    /*
+        If every team has already attempted,
+        there is nobody left to buzz.
+    */
+    if (
+        attemptedTeams.size >=
+        Object.keys(teams).length
+    ) {
+
+        questionEnded =
+            true;
+
+
+        stopTimer();
+
+        highlightCorrectAnswer();
+
+        disableAnswers();
+
+        buzzStatus.textContent =
+            "NO MORE TEAMS CAN ANSWER.";
+
+        notifyPhonesQuestionEnded();
+
+
+        nextBtn.style.display =
+            "block";
+
+
+        nextBtn.textContent =
+            currentQuestion ===
+            questions.length - 1
+                ? "FINISH ROUND →"
+                : "NEXT QUESTION →";
 
     }
 
@@ -2234,21 +2298,13 @@ startTimerBtn.addEventListener(
 
 function startTimer() {
 
-    if (
-        questionEnded
-    ) {
-
+    if (questionEnded) {
         return;
-
     }
 
 
-    if (
-        timerRunning
-    ) {
-
+    if (timerRunning) {
         return;
-
     }
 
 
@@ -2306,7 +2362,8 @@ function stopTimer() {
 
         clearInterval(timer);
 
-        timer = null;
+        timer =
+            null;
 
     }
 
@@ -2315,9 +2372,7 @@ function stopTimer() {
         false;
 
 
-    if (
-        !questionEnded
-    ) {
+    if (!questionEnded) {
 
         timerStatus.textContent =
             "STOPPED";
@@ -2376,12 +2431,8 @@ function updateTimer() {
 
 function timeExpired() {
 
-    if (
-        questionEnded
-    ) {
-
+    if (questionEnded) {
         return;
-
     }
 
 
@@ -2444,9 +2495,7 @@ endQuestionBtn.addEventListener(
     "click",
     () => {
 
-        if (
-            !questionEnded
-        ) {
+        if (!questionEnded) {
 
             timeExpired();
 
@@ -2492,9 +2541,7 @@ function highlightCorrectAnswer() {
         );
 
 
-    if (
-        buttons[q.correct]
-    ) {
+    if (buttons[q.correct]) {
 
         buttons[q.correct]
             .classList.add(
@@ -2609,11 +2656,10 @@ function updateScoreboard() {
    HEARTS
    ========================================================= */
 
-function createHearts(
-    hearts
-) {
+function createHearts(hearts) {
 
-    let output = "";
+    let output =
+        "";
 
 
     for (
@@ -2622,17 +2668,17 @@ function createHearts(
         i++
     ) {
 
-        if (
-            i < hearts
-        ) {
+        if (i < hearts) {
 
-            output += "❤️";
+            output +=
+                "❤️";
 
         }
 
         else {
 
-            output += "🖤";
+            output +=
+                "🖤";
 
         }
 
@@ -2717,55 +2763,213 @@ function notifyPhonesQuestionEnded() {
 function playUndertakerBell() {
 
     playSound(
-        "sounds/undertaker-bell.mp3"
+        "undertakers-bell_2UwFCle.mp3"
     );
 
 }
 
 
 /* =========================================================
-   MEME SOUNDBOARD
+   16-SOUND MEME SOUNDBOARD
    ========================================================= */
 
-function playMeme(
-    number
-) {
+const memeSounds = {
 
-    const sounds = {
+    1:
+        "YEET sound effect (meme) - QuickSounds.com.mp3",
 
-        1:
-            "sounds/yeet.mp3",
+    2:
+        "Fahhh - QuickSounds.com.mp3",
 
-        2:
-            "sounds/fahhhh.mp3",
+    3:
+        "Bruh sound effect #2 - QuickSounds.com.mp3",
 
-        3:
-            "sounds/bruhhh.mp3",
+    4:
+        "VINE BOOM SOUND - QuickSounds.com.mp3",
 
-        4:
-            "sounds/vine-boom.mp3",
+    5:
+        "Japanese YOOOO - QuickSounds.com.mp3",
 
-        5:
-            "sounds/yooo.mp3",
+    6:
+        "SIGMA COLD RIZZ - QuickSounds.com.mp3",
 
-        6:
-            "sounds/rizz.mp3",
+    7:
+        "spiderman-meme-song.mp3",
 
-        7:
-            "sounds/lets-gooo.mp3",
+    8:
+        "7-crore-kbc.mp3",
 
-        8:
-            "sounds/7-croreeeee.mp3"
+    9:
+        "cat-laugh-meme-1.mp3",
 
-    };
+    10:
+        "dun-dun-dun-sound-effect-brass_8nFbRCB.mp3",
+
+    11:
+        "fart-meme-sound.mp3",
+
+    12:
+        "huh_37bAoRo.mp3",
+
+    13:
+        "rizzbot-laugh.mp3",
+
+    14:
+        "sad-violin.mp3",
+
+    15:
+        "auughhh.mp3",
+
+    16:
+        "undertakers-bell_2UwFCle.mp3"
+
+};
 
 
-    if (
-        sounds[number]
-    ) {
+const memeLabels = {
+
+    1: "YEET",
+
+    2: "FAHHHH",
+
+    3: "BRUHHH",
+
+    4: "VINE BOOM",
+
+    5: "YOOO",
+
+    6: "RIZZ",
+
+    7: "LET'S GOOO",
+
+    8: "7 CRORE",
+
+    9: "CAT LAUGH",
+
+    10: "DUN DUN DUN",
+
+    11: "FART",
+
+    12: "HUH?",
+
+    13: "RIZZBOT LAUGH",
+
+    14: "SAD VIOLIN",
+
+    15: "AUGHHHH",
+
+    16: "UNDERTAKER"
+
+};
+
+
+/* =========================================================
+   PLAY MEME
+   ========================================================= */
+
+function playMeme(number) {
+
+    const sound =
+        memeSounds[number];
+
+
+    if (sound) {
 
         playSound(
-            sounds[number]
+            sound
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE EXTRA SOUND BUTTONS
+   =========================================================
+
+   Your existing index.html already has buttons 1–8.
+
+   This automatically adds buttons 9–16,
+   so you DO NOT need to edit index.html.
+
+   ========================================================= */
+
+function setupSoundboard() {
+
+    const soundContainer =
+        document.querySelector(
+            ".sound-buttons"
+        );
+
+
+    if (!soundContainer) {
+        return;
+    }
+
+
+    /*
+        Add buttons 9–16.
+    */
+
+    for (
+        let number = 9;
+        number <= 16;
+        number++
+    ) {
+
+        /*
+            Prevent duplicate buttons if this
+            function somehow runs twice.
+        */
+
+        if (
+            soundContainer.querySelector(
+                `[data-meme-number="${number}"]`
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type =
+            "button";
+
+
+        button.className =
+            "meme-btn";
+
+
+        button.dataset.memeNumber =
+            number;
+
+
+        button.textContent =
+            number +
+            ". " +
+            memeLabels[number];
+
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                playMeme(number);
+
+            }
+        );
+
+
+        soundContainer.appendChild(
+            button
         );
 
     }
@@ -2777,9 +2981,13 @@ function playMeme(
    AUDIO
    ========================================================= */
 
-function playSound(
-    file
-) {
+function playSound(file) {
+
+    /*
+        The MP3 files are in the same directory
+        as index.html, so NO "sounds/" folder
+        is used here.
+    */
 
     const audio =
         new Audio(file);
@@ -2917,6 +3125,12 @@ restartBtn.addEventListener(
         questions =
             roundQuestions[1];
 
+        attemptedTeams =
+            new Set();
+
+        activeTeam =
+            null;
+
         resetTeams();
 
         showScreen(
@@ -2957,3 +3171,5 @@ window.playMeme =
 resetTeams();
 
 updateTimer();
+
+setupSoundboard();
