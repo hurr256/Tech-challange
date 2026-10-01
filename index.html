@@ -72,7 +72,7 @@
                 id="start-btn"
                 class="main-btn"
             >
-                START HOST GAME
+                🔐 HOST GAME
             </button>
 
 
@@ -85,6 +85,163 @@
 
         </section>
 
+
+        <!-- =====================================================
+             HOST PASSWORD SCREEN
+             ===================================================== -->
+
+        <section
+            id="password-screen"
+            class="screen"
+        >
+
+            <div class="logo small-logo">
+                🔐
+            </div>
+
+            <h2>
+                HOST ACCESS
+            </h2>
+
+            <p class="screen-description">
+                Enter the host password to continue.
+            </p>
+
+
+            <div class="password-card">
+
+                <label for="host-password">
+                    HOST PASSWORD
+                </label>
+
+                <input
+                    id="host-password"
+                    type="password"
+                    placeholder="Enter password"
+                    autocomplete="off"
+                >
+
+
+                <button
+                    id="password-btn"
+                    class="main-btn"
+                >
+                    CONTINUE
+                </button>
+
+
+                <div
+                    id="password-error"
+                    class="password-error"
+                ></div>
+
+            </div>
+
+
+            <button
+                id="password-back-btn"
+                class="secondary-btn"
+            >
+                ← BACK
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             ROUND SELECTION SCREEN
+             ===================================================== -->
+
+        <section
+            id="round-screen"
+            class="screen"
+        >
+
+            <div class="logo small-logo">
+                🎯
+            </div>
+
+            <h2>
+                SELECT <span>ROUND</span>
+            </h2>
+
+            <p class="screen-description">
+                Choose the round you want to play.
+            </p>
+
+
+            <div class="round-selection">
+
+                <button
+                    class="round-btn"
+                    data-round="1"
+                >
+
+                    <span class="round-number">
+                        1
+                    </span>
+
+                    <span>
+                        ROUND 1
+                    </span>
+
+                    <small>
+                        15 Questions
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="round-btn"
+                    data-round="2"
+                >
+
+                    <span class="round-number">
+                        2
+                    </span>
+
+                    <span>
+                        ROUND 2
+                    </span>
+
+                    <small>
+                        15 Questions
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="round-btn"
+                    data-round="3"
+                >
+
+                    <span class="round-number">
+                        3
+                    </span>
+
+                    <span>
+                        ROUND 3
+                    </span>
+
+                    <small>
+                        15 Questions
+                    </small>
+
+                </button>
+
+            </div>
+
+
+            <button
+                id="round-back-btn"
+                class="secondary-btn"
+            >
+                ← BACK
+            </button>
+
+        </section>
 
 
         <!-- =====================================================
@@ -199,7 +356,6 @@
         </section>
 
 
-
         <!-- =====================================================
              HOST GAME SCREEN
              ===================================================== -->
@@ -209,7 +365,6 @@
             class="screen"
         >
 
-
             <!-- HOST HEADER -->
 
             <header class="host-header">
@@ -218,6 +373,13 @@
 
                     <div class="host-label">
                         STEM TECH CHALLENGE
+                    </div>
+
+                    <div class="current-round-label">
+                        ROUND
+                        <span id="current-round-display">
+                            1
+                        </span>
                     </div>
 
                     <div class="host-question-number">
@@ -241,6 +403,7 @@
                 >
 
                     HOST ID:
+
                     <strong id="host-id">
                         CONNECTING...
                     </strong>
@@ -250,13 +413,9 @@
             </header>
 
 
-
-            <!-- =================================================
-                 TEAM SCOREBOARD
-                 ================================================= -->
+            <!-- TEAM SCOREBOARD -->
 
             <div class="team-scoreboard">
-
 
                 <div
                     class="team-card"
@@ -286,7 +445,6 @@
                     </div>
 
                 </div>
-
 
 
                 <div
@@ -319,7 +477,6 @@
                 </div>
 
 
-
                 <div
                     class="team-card"
                     id="team3-card"
@@ -348,7 +505,6 @@
                     </div>
 
                 </div>
-
 
 
                 <div
@@ -383,10 +539,7 @@
             </div>
 
 
-
-            <!-- =================================================
-                 TIMER
-                 ================================================= -->
+            <!-- TIMER -->
 
             <div class="timer-section">
 
@@ -401,7 +554,6 @@
 
                 </div>
 
-
                 <div
                     id="timer-status"
                     class="timer-status"
@@ -412,10 +564,7 @@
             </div>
 
 
-
-            <!-- =================================================
-                 HOST CONTROLS
-                 ================================================= -->
+            <!-- HOST CONTROLS -->
 
             <div class="host-controls">
 
@@ -447,13 +596,17 @@
                     🔔 END QUESTION
                 </button>
 
+                <button
+                    id="change-round-btn"
+                    class="control-btn round-control"
+                >
+                    🎯 CHANGE ROUND
+                </button>
+
             </div>
 
 
-
-            <!-- =================================================
-                 BUZZER STATUS
-                 ================================================= -->
+            <!-- BUZZER STATUS -->
 
             <div
                 id="buzz-status"
@@ -463,10 +616,7 @@
             </div>
 
 
-
-            <!-- =================================================
-                 QUESTION CARD
-                 ================================================= -->
+            <!-- QUESTION CARD -->
 
             <div class="question-card">
 
@@ -505,10 +655,7 @@
             </div>
 
 
-
-            <!-- =================================================
-                 MEME SOUNDBOARD
-                 ================================================= -->
+            <!-- SOUNDBOARD -->
 
             <div class="soundboard">
 
@@ -527,7 +674,6 @@
                         YEET
                     </button>
 
-
                     <button
                         onclick="playMeme(2)"
                         class="meme-btn"
@@ -535,7 +681,6 @@
                         <span>2</span>
                         FAHHHH
                     </button>
-
 
                     <button
                         onclick="playMeme(3)"
@@ -545,7 +690,6 @@
                         BRUHHH
                     </button>
 
-
                     <button
                         onclick="playMeme(4)"
                         class="meme-btn"
@@ -553,7 +697,6 @@
                         <span>4</span>
                         VINE BOOM
                     </button>
-
 
                     <button
                         onclick="playMeme(5)"
@@ -563,7 +706,6 @@
                         YOOO
                     </button>
 
-
                     <button
                         onclick="playMeme(6)"
                         class="meme-btn"
@@ -572,7 +714,6 @@
                         RIZZ
                     </button>
 
-
                     <button
                         onclick="playMeme(7)"
                         class="meme-btn"
@@ -580,7 +721,6 @@
                         <span>7</span>
                         LET'S GOOO
                     </button>
-
 
                     <button
                         onclick="playMeme(8)"
@@ -597,7 +737,6 @@
         </section>
 
 
-
         <!-- =====================================================
              RESULT SCREEN
              ===================================================== -->
@@ -611,14 +750,12 @@
                 🏆
             </div>
 
-
             <h1>
-                CHALLENGE COMPLETE!
+                ROUND COMPLETE!
             </h1>
 
-
             <p class="result-text">
-                FINAL RESULTS
+                ROUND <span id="result-round-number">1</span> RESULTS
             </p>
 
 
@@ -664,10 +801,18 @@
 
 
             <button
-                id="restart-btn"
+                id="next-round-btn"
                 class="main-btn"
             >
-                PLAY AGAIN
+                SELECT NEXT ROUND
+            </button>
+
+
+            <button
+                id="restart-btn"
+                class="secondary-btn"
+            >
+                BACK TO START
             </button>
 
         </section>
