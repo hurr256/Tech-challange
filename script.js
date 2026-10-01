@@ -16,6 +16,9 @@
    -2 POINTS WHEN NO HEARTS REMAIN
    UNDERTAKER BELL ON TIME END
    16-SOUND MANUAL MEME SOUNDBOARD
+   STOP MEME BUTTON
+   AUTOMATICALLY STOP PREVIOUS MEME
+   MULTIPLE TEAMS CAN ATTEMPT AFTER WRONG ANSWERS
 
    ========================================================= */
 
@@ -737,17 +740,16 @@ let activeTeam = null;
 
 let questionWasPassed = false;
 
-/*
-    NEW:
-    Keeps track of teams that have already attempted
-    the current question.
-
-    This allows multiple different teams to answer
-    the same question after a wrong answer.
-*/
 let attemptedTeams = new Set();
 
 let peer = null;
+
+
+/* =========================================================
+   MEME AUDIO STATE
+   ========================================================= */
+
+let currentMemeAudio = null;
 
 
 /* =========================================================
@@ -897,6 +899,8 @@ const phoneBuzzStatus =
 
 function showScreen(screen) {
 
+    if (!screen) return;
+
     document
         .querySelectorAll(".screen")
         .forEach(s => {
@@ -904,6 +908,7 @@ function showScreen(screen) {
         });
 
     screen.classList.add("active");
+
 }
 
 
@@ -1248,8 +1253,6 @@ function handlePhoneMessage(
     }
 
 
-    /* PHONE IDENTIFICATION */
-
     if (data.type === "identify") {
 
         const teamKey =
@@ -1294,10 +1297,6 @@ function handlePhoneMessage(
         });
 
 
-        /*
-            Tell the phone whether it is currently
-            allowed to buzz.
-        */
         sendBuzzAvailability(
             teamKey,
             connection
@@ -1309,8 +1308,6 @@ function handlePhoneMessage(
 
     }
 
-
-    /* BUZZ */
 
     if (data.type === "buzz") {
 
@@ -1506,11 +1503,6 @@ function handlePhoneResponse(data) {
     }
 
 
-    /*
-        NEW:
-        The host has reopened the buzzer after
-        another team answered incorrectly.
-    */
     if (data.type === "buzz-open") {
 
         if (data.allowed) {
@@ -1571,13 +1563,18 @@ phoneBuzzBtn.addEventListener(
         const selectedTeam =
             teamSelect.value;
 
-        if (!window.phoneConnection) {
+        const connection =
+            window.phoneConnection;
+
+
+        if (!connection) {
             return;
         }
 
-        if (window.phoneConnection.open) {
 
-            phoneConnection.send({
+        if (connection.open) {
+
+            connection.send({
 
                 type:
                     "buzz",
@@ -1612,11 +1609,6 @@ function teamBuzz(teamKey) {
     }
 
 
-    /*
-        NEW:
-        A team that has already answered incorrectly
-        cannot buzz again on the same question.
-    */
     if (attemptedTeams.has(teamKey)) {
 
         sendBuzzResult(
@@ -1629,9 +1621,6 @@ function teamBuzz(teamKey) {
     }
 
 
-    /*
-        Only one team can have control at a time.
-    */
     if (activeTeam !== null) {
 
         sendBuzzResult(
@@ -1648,10 +1637,8 @@ function teamBuzz(teamKey) {
         teamKey;
 
 
-    /*
-        First team to buzz stops the timer.
-    */
     stopTimer();
+
 
     questionWasPassed =
         false;
@@ -1896,12 +1883,6 @@ function showQuestion() {
     questionWasPassed =
         false;
 
-
-    /*
-        NEW:
-        Reset the list of teams that have attempted
-        the new question.
-    */
     attemptedTeams =
         new Set();
 
@@ -2042,10 +2023,6 @@ function markAnswer(
     }
 
 
-    /*
-        A team that has already answered cannot
-        answer again.
-    */
     if (attemptedTeams.has(teamKey)) {
         return;
     }
@@ -2061,18 +2038,14 @@ function markAnswer(
         );
 
 
-    /*
-        Mark this team as having attempted
-        the current question.
-    */
     attemptedTeams.add(
         teamKey
     );
 
 
-    /*
-        CORRECT ANSWER
-    */
+    /* =====================================================
+       CORRECT ANSWER
+       ===================================================== */
 
     if (
         selectedIndex ===
@@ -2122,9 +2095,6 @@ function markAnswer(
             "feedback correct-text";
 
 
-        /*
-            Correct answer ends the question.
-        */
         questionEnded =
             true;
 
@@ -2154,21 +2124,14 @@ function markAnswer(
     }
 
 
-    /*
-        WRONG ANSWER
-    */
+    /* =====================================================
+       WRONG ANSWER
+       ===================================================== */
 
     buttons[selectedIndex]
         .classList.add(
             "wrong"
         );
-
-
-    /*
-        Show the correct answer only after
-        the question is finally ended.
-        This lets other teams continue trying.
-    */
 
 
     const team =
@@ -2211,10 +2174,6 @@ function markAnswer(
         "feedback wrong-text";
 
 
-    /*
-        IMPORTANT:
-        Give the other teams another chance.
-    */
     activeTeam =
         null;
 
@@ -2239,17 +2198,13 @@ function markAnswer(
     );
 
 
-    /*
-        Re-open buzzers for teams that have
-        not attempted the question.
-    */
     notifyPhonesBuzzOpen();
 
 
-    /*
-        If every team has already attempted,
-        there is nobody left to buzz.
-    */
+    /* =====================================================
+       ALL TEAMS HAVE ATTEMPTED
+       ===================================================== */
+
     if (
         attemptedTeams.size >=
         Object.keys(teams).length
@@ -2265,8 +2220,10 @@ function markAnswer(
 
         disableAnswers();
 
+
         buzzStatus.textContent =
             "NO MORE TEAMS CAN ANSWER.";
+
 
         notifyPhonesQuestionEnded();
 
@@ -2304,6 +2261,11 @@ function startTimer() {
 
 
     if (timerRunning) {
+        return;
+    }
+
+
+    if (timeLeft <= 0) {
         return;
     }
 
@@ -2762,8 +2724,13 @@ function notifyPhonesQuestionEnded() {
 
 function playUndertakerBell() {
 
+    /*
+       Exact filename from GitHub repository.
+    */
+
     playSound(
-        "undertakers-bell_2UwFCle.mp3"
+        "undertakers-bell_2UwFCIe.mp3",
+        false
     );
 
 }
@@ -2803,7 +2770,7 @@ const memeSounds = {
         "cat-laugh-meme-1.mp3",
 
     10:
-        "dun-dun-dun-sound-effect-brass_8nFbRCB.mp3",
+        "dun-dun-dun-sound-effect-brass_8nFBccR.mp3",
 
     11:
         "fart-meme-sound.mp3",
@@ -2815,13 +2782,13 @@ const memeSounds = {
         "rizzbot-laugh.mp3",
 
     14:
-        "sad-violin.mp3",
+        "sad violin.mp3",
 
     15:
         "auughhh.mp3",
 
     16:
-        "undertakers-bell_2UwFCle.mp3"
+        "undertakers-bell_2UwFCIe.mp3"
 
 };
 
@@ -2869,17 +2836,115 @@ const memeLabels = {
 
 function playMeme(number) {
 
+    /*
+       Convert to a real number so:
+       "11" becomes 11,
+       "2" becomes 2,
+       etc.
+
+       This guarantees that button 11
+       plays meme 11 and NOT meme 1.
+    */
+
+    number =
+        Number(number);
+
+
     const sound =
         memeSounds[number];
 
 
-    if (sound) {
+    if (!sound) {
 
-        playSound(
-            sound
+        console.warn(
+            "No sound assigned to meme:",
+            number
+        );
+
+        return;
+
+    }
+
+
+    /*
+       STOP THE PREVIOUS MEME FIRST.
+    */
+
+    stopMeme();
+
+
+    /*
+       Start the exact meme number.
+    */
+
+    currentMemeAudio =
+        new Audio(sound);
+
+
+    currentMemeAudio.volume =
+        1.0;
+
+
+    currentMemeAudio.addEventListener(
+        "ended",
+        () => {
+
+            currentMemeAudio =
+                null;
+
+        }
+    );
+
+
+    currentMemeAudio
+        .play()
+        .catch(
+            error => {
+
+                console.warn(
+                    "Meme sound failed:",
+                    sound,
+                    error
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   STOP MEME
+   ========================================================= */
+
+function stopMeme() {
+
+    if (!currentMemeAudio) {
+        return;
+    }
+
+
+    try {
+
+        currentMemeAudio.pause();
+
+        currentMemeAudio.currentTime =
+            0;
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not stop meme:",
+            error
         );
 
     }
+
+
+    currentMemeAudio =
+        null;
 
 }
 
@@ -2888,10 +2953,19 @@ function playMeme(number) {
    CREATE EXTRA SOUND BUTTONS
    =========================================================
 
-   Your existing index.html already has buttons 1–8.
+   Buttons 1–8 already exist in index.html.
 
-   This automatically adds buttons 9–16,
-   so you DO NOT need to edit index.html.
+   This automatically creates:
+   9
+   10
+   11
+   12
+   13
+   14
+   15
+   16
+
+   It also creates the STOP SOUND button.
 
    ========================================================= */
 
@@ -2908,20 +2982,74 @@ function setupSoundboard() {
     }
 
 
-    /*
-        Add buttons 9–16.
-    */
+    /* =====================================================
+       FIX EXISTING BUTTONS 1–8
+       ===================================================== */
+
+    const existingButtons =
+        soundContainer.querySelectorAll(
+            ".meme-btn"
+        );
+
+
+    existingButtons.forEach(
+        button => {
+
+            const text =
+                button.textContent.trim();
+
+
+            /*
+               Read the number at the beginning
+               of the button text.
+
+               Example:
+               "1. YEET" -> 1
+               "2. FAHHHH" -> 2
+            */
+
+            const match =
+                text.match(/^(\d+)/);
+
+
+            if (!match) {
+                return;
+            }
+
+
+            const number =
+                Number(match[1]);
+
+
+            /*
+               Remove old inline onclick
+               behavior and use the exact number.
+            */
+
+            button.dataset.memeNumber =
+                number;
+
+
+            button.onclick =
+                () => {
+
+                    playMeme(number);
+
+                };
+
+        }
+    );
+
+
+    /* =====================================================
+       CREATE BUTTONS 9–16
+       ===================================================== */
 
     for (
         let number = 9;
         number <= 16;
         number++
     ) {
-
-        /*
-            Prevent duplicate buttons if this
-            function somehow runs twice.
-        */
 
         if (
             soundContainer.querySelector(
@@ -2974,6 +3102,47 @@ function setupSoundboard() {
 
     }
 
+
+    /* =====================================================
+       CREATE STOP BUTTON
+       ===================================================== */
+
+    if (
+        !soundContainer.querySelector(
+            ".stop-meme-btn"
+        )
+    ) {
+
+        const stopButton =
+            document.createElement(
+                "button"
+            );
+
+
+        stopButton.type =
+            "button";
+
+
+        stopButton.className =
+            "meme-btn stop-meme-btn";
+
+
+        stopButton.textContent =
+            "⏹ STOP SOUND";
+
+
+        stopButton.addEventListener(
+            "click",
+            stopMeme
+        );
+
+
+        soundContainer.appendChild(
+            stopButton
+        );
+
+    }
+
 }
 
 
@@ -2981,13 +3150,21 @@ function setupSoundboard() {
    AUDIO
    ========================================================= */
 
-function playSound(file) {
+function playSound(
+    file,
+    stopCurrentMeme = false
+) {
 
     /*
-        The MP3 files are in the same directory
-        as index.html, so NO "sounds/" folder
-        is used here.
+       If requested, stop the meme currently playing.
     */
+
+    if (stopCurrentMeme) {
+
+        stopMeme();
+
+    }
+
 
     const audio =
         new Audio(file);
@@ -3003,6 +3180,7 @@ function playSound(file) {
 
                 console.warn(
                     "Audio playback failed:",
+                    file,
                     error
                 );
 
@@ -3019,6 +3197,8 @@ function playSound(file) {
 function showResults() {
 
     stopTimer();
+
+    stopMeme();
 
     gameStarted =
         false;
@@ -3113,6 +3293,8 @@ restartBtn.addEventListener(
 
         stopTimer();
 
+        stopMeme();
+
         gameStarted =
             false;
 
@@ -3162,6 +3344,9 @@ window.hostEndQuestion =
 
 window.playMeme =
     playMeme;
+
+window.stopMeme =
+    stopMeme;
 
 
 /* =========================================================
