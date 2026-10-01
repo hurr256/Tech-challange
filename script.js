@@ -4,7 +4,9 @@
 
    FEATURES:
 
-   15 QUESTIONS
+   HOST PASSWORD
+   3 ROUNDS
+   15 QUESTIONS PER ROUND
    4 TEAMS
    3 HEARTS PER TEAM
    PHONE BUZZERS
@@ -20,10 +22,34 @@
 
 
 /* =========================================================
-   QUESTIONS
+   HOST PASSWORD
    ========================================================= */
 
-const questions = [
+const HOST_PASSWORD = "hurr3214@$";
+
+
+/* =========================================================
+   GAME SETTINGS
+   ========================================================= */
+
+const GAME_TIME = 15;
+
+const STARTING_HEARTS = 3;
+
+const CORRECT_BEFORE_TIME = 5;
+
+const CORRECT_AFTER_TIME = 2;
+
+const WRONG_HEART_PENALTY = 1;
+
+const WRONG_NO_HEART_PENALTY = 2;
+
+
+/* =========================================================
+   ROUND 1 QUESTIONS
+   ========================================================= */
+
+const round1Questions = [
 
     {
         category: "COMPUTER MEMORY",
@@ -90,11 +116,6 @@ const questions = [
         correct: 1
     },
 
-
-    /* =====================================================
-       ROUND 2
-       ===================================================== */
-
     {
         category: "OPEN SOURCE",
         question:
@@ -159,11 +180,6 @@ const questions = [
         ],
         correct: 1
     },
-
-
-    /* =====================================================
-       ROUND 3
-       ===================================================== */
 
     {
         category: "ARTIFICIAL INTELLIGENCE",
@@ -234,20 +250,435 @@ const questions = [
 
 
 /* =========================================================
-   SETTINGS
+   ROUND 2 QUESTIONS
    ========================================================= */
 
-const GAME_TIME = 15;
+const round2Questions = [
 
-const STARTING_HEARTS = 3;
+    {
+        category: "FILE FORMATS",
+        question:
+            "Which of these is a lossless compression format?",
+        answers: [
+            "JPEG",
+            "MP3",
+            "PNG",
+            "MP4"
+        ],
+        correct: 2
+    },
 
-const CORRECT_BEFORE_TIME = 5;
+    {
+        category: "PROGRAMMING",
+        question:
+            "In programming, which keyword is commonly used to define a constant value?",
+        answers: [
+            "let",
+            "const",
+            "def",
+            "final"
+        ],
+        correct: 1
+    },
 
-const CORRECT_AFTER_TIME = 2;
+    {
+        category: "DATABASES",
+        question:
+            "Which SQL command is used to remove a table permanently?",
+        answers: [
+            "DELETE",
+            "REMOVE",
+            "DROP",
+            "ERASE"
+        ],
+        correct: 2
+    },
 
-const WRONG_HEART_PENALTY = 1;
+    {
+        category: "NETWORKING",
+        question:
+            "Which layer of the OSI model handles end-to-end error recovery and flow control?",
+        answers: [
+            "Transport",
+            "Network",
+            "Session",
+            "Data Link"
+        ],
+        correct: 0
+    },
 
-const WRONG_NO_HEART_PENALTY = 2;
+    {
+        category: "COMPUTER MEMORY",
+        question:
+            "Which type of memory is used for caching to speed up CPU operations?",
+        answers: [
+            "ROM",
+            "Cache",
+            "Flash",
+            "Virtual Memory"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "ALGORITHMS",
+        question:
+            "Which algorithm is commonly used for finding shortest paths in weighted graphs?",
+        answers: [
+            "BFS",
+            "Dijkstra's Algorithm",
+            "Prim's Algorithm",
+            "Floyd-Warshall"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "OBJECT-ORIENTED PROGRAMMING",
+        question:
+            "In object-oriented design, encapsulation refers to:",
+        answers: [
+            "Code reusability",
+            "Restricting access to data within a class",
+            "Hiding implementation from the compiler",
+            "Writing multiple methods with the same name"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "DATABASES",
+        question:
+            "Which of these is NOT a NoSQL database?",
+        answers: [
+            "Cassandra",
+            "Redis",
+            "PostgreSQL",
+            "MongoDB"
+        ],
+        correct: 2
+    },
+
+    {
+        category: "CYBERSECURITY",
+        question:
+            "Which type of attack floods a server with excessive requests to overwhelm it?",
+        answers: [
+            "Phishing",
+            "Denial of Service (DoS)",
+            "Man-in-the-Middle",
+            "SQL Injection"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "PROGRAMMING",
+        question:
+            "Which programming language is often used for system-level programming such as operating systems?",
+        answers: [
+            "Java",
+            "C",
+            "PHP",
+            "Python"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "ALGORITHMS",
+        question:
+            "Which sorting algorithm guarantees O(n log n) time in the worst case and works by splitting an array into smaller parts and merging them?",
+        answers: [
+            "Quick Sort",
+            "Merge Sort",
+            "Insertion Sort",
+            "Bubble Sort"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "NETWORKING",
+        question:
+            "Which protocol is used to secure HTTP communications using TLS?",
+        answers: [
+            "FTP",
+            "HTTP",
+            "HTTPS",
+            "SMTP"
+        ],
+        correct: 2
+    },
+
+    {
+        category: "DATABASES",
+        question:
+            "The 'I' in ACID stands for Isolation. What does Isolation ensure?",
+        answers: [
+            "Transactions run independently",
+            "Data is encrypted",
+            "Databases scale automatically",
+            "Indexes are preserved"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "MACHINE LEARNING",
+        question:
+            "Which machine learning technique is commonly used for dimensionality reduction?",
+        answers: [
+            "K-Means",
+            "PCA (Principal Component Analysis)",
+            "Decision Trees",
+            "Gradient Descent"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "CYBERSECURITY",
+        question:
+            "In cybersecurity, a zero-day vulnerability refers to:",
+        answers: [
+            "A bug fixed within 24 hours",
+            "A flaw exploited before the vendor releases a patch",
+            "Malware that deletes data on the first day",
+            "A system failure with no backup"
+        ],
+        correct: 1
+    }
+
+];
+
+
+/* =========================================================
+   ROUND 3 QUESTIONS
+   ========================================================= */
+
+const round3Questions = [
+
+    {
+        category: "DATA STRUCTURES",
+        question:
+            "Which data structure follows the LIFO principle?",
+        answers: [
+            "Queue",
+            "Stack",
+            "Array",
+            "Tree"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "COMPUTER BASICS",
+        question:
+            "What does CPU stand for?",
+        answers: [
+            "Central Processing Unit",
+            "Computer Processing Utility",
+            "Central Program User",
+            "Computer Power Unit"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "WEB DEVELOPMENT",
+        question:
+            "Which HTTP status code means 'Not Found'?",
+        answers: [
+            "200",
+            "301",
+            "404",
+            "500"
+        ],
+        correct: 2
+    },
+
+    {
+        category: "WEB DEVELOPMENT",
+        question:
+            "Which language is primarily used to style web pages?",
+        answers: [
+            "HTML",
+            "CSS",
+            "SQL",
+            "Python"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "NETWORKING",
+        question:
+            "Which device connects different networks and forwards data between them?",
+        answers: [
+            "Keyboard",
+            "Router",
+            "Monitor",
+            "Printer"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "COMPUTER HARDWARE",
+        question:
+            "What does GPU stand for?",
+        answers: [
+            "General Processing Unit",
+            "Graphics Processing Unit",
+            "Graphical Program Utility",
+            "General Program Unit"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "ARTIFICIAL INTELLIGENCE",
+        question:
+            "Which of these is an example of Artificial Intelligence?",
+        answers: [
+            "A calculator performing basic addition",
+            "A voice assistant understanding spoken commands",
+            "A USB cable",
+            "A computer mouse"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "PROGRAMMING",
+        question:
+            "Which programming concept allows a function to call itself?",
+        answers: [
+            "Inheritance",
+            "Recursion",
+            "Compilation",
+            "Encapsulation"
+        ],
+        correct: 1
+    },
+
+    {
+        category: "DATABASES",
+        question:
+            "Which language is commonly used to retrieve and manipulate data in databases?",
+        answers: [
+            "HTML",
+            "CSS",
+            "SQL",
+            "XML"
+        ],
+        correct: 2
+    },
+
+    {
+        category: "NETWORKING",
+        question:
+            "What is the main purpose of an IP address?",
+        answers: [
+            "To identify a device on a network",
+            "To increase storage space",
+            "To protect a screen",
+            "To install software"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "BLOCKCHAIN",
+        question:
+            "Which technology is commonly used to store cryptocurrency transaction records?",
+        answers: [
+            "Blockchain",
+            "Bluetooth",
+            "HTML",
+            "RAM"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "COMPUTER MEMORY",
+        question:
+            "What happens to the data currently stored in RAM when a computer is turned off?",
+        answers: [
+            "It is permanently saved",
+            "It is printed",
+            "It is lost",
+            "It moves to the CPU"
+        ],
+        correct: 2
+    },
+
+    {
+        category: "CYBERSECURITY",
+        question:
+            "Which cybersecurity technique tricks users into revealing sensitive information?",
+        answers: [
+            "Phishing",
+            "Encryption",
+            "Compression",
+            "Defragmentation"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "SOFTWARE DEVELOPMENT",
+        question:
+            "Which version-control system is commonly used by software developers?",
+        answers: [
+            "Git",
+            "Excel",
+            "PowerPoint",
+            "Paint"
+        ],
+        correct: 0
+    },
+
+    {
+        category: "CYBERSECURITY",
+        question:
+            "What is the main purpose of encryption?",
+        answers: [
+            "To make computers faster",
+            "To protect information by converting it into an unreadable form",
+            "To increase screen brightness",
+            "To delete computer viruses"
+        ],
+        correct: 1
+    }
+
+];
+
+
+/* =========================================================
+   ALL ROUNDS
+   ========================================================= */
+
+const roundQuestions = {
+
+    1: round1Questions,
+
+    2: round2Questions,
+
+    3: round3Questions
+
+};
+
+
+/* =========================================================
+   CURRENT ROUND
+   ========================================================= */
+
+let currentRound = 1;
+
+let questions = roundQuestions[1];
 
 
 /* =========================================================
@@ -311,6 +742,8 @@ let activeTeam = null;
 
 let questionWasPassed = false;
 
+let answerAlreadyScored = false;
+
 let peer = null;
 
 
@@ -320,6 +753,12 @@ let peer = null;
 
 const startScreen =
     document.getElementById("start-screen");
+
+const passwordScreen =
+    document.getElementById("password-screen");
+
+const roundScreen =
+    document.getElementById("round-screen");
 
 const phoneScreen =
     document.getElementById("phone-screen");
@@ -334,14 +773,44 @@ const resultScreen =
 const startBtn =
     document.getElementById("start-btn");
 
+const passwordBtn =
+    document.getElementById("password-btn");
+
+const passwordBackBtn =
+    document.getElementById("password-back-btn");
+
+const roundBackBtn =
+    document.getElementById("round-back-btn");
+
 const phoneModeBtn =
     document.getElementById("phone-mode-btn");
 
-const joinBtn =
-    document.getElementById("join-btn");
-
 const restartBtn =
     document.getElementById("restart-btn");
+
+const nextRoundBtn =
+    document.getElementById("next-round-btn");
+
+const changeRoundBtn =
+    document.getElementById("change-round-btn");
+
+
+const passwordInput =
+    document.getElementById("host-password");
+
+const passwordError =
+    document.getElementById("password-error");
+
+
+const currentRoundDisplay =
+    document.getElementById("current-round-display");
+
+const resultRoundNumber =
+    document.getElementById("result-round-number");
+
+
+const joinBtn =
+    document.getElementById("join-btn");
 
 
 const questionElement =
@@ -370,6 +839,7 @@ const questionNumberElement =
 
 const feedbackElement =
     document.getElementById("feedback");
+
 
 const nextBtn =
     document.getElementById("next-btn");
@@ -427,7 +897,9 @@ function showScreen(screen) {
     document
         .querySelectorAll(".screen")
         .forEach(s => {
+
             s.classList.remove("active");
+
         });
 
     screen.classList.add("active");
@@ -436,28 +908,213 @@ function showScreen(screen) {
 
 
 /* =========================================================
-   START HOST
+   HOST BUTTON
    ========================================================= */
 
 startBtn.addEventListener(
     "click",
-    startHostGame
+    () => {
+
+        passwordInput.value = "";
+
+        passwordError.textContent = "";
+
+        showScreen(passwordScreen);
+
+        setTimeout(() => {
+
+            passwordInput.focus();
+
+        }, 100);
+
+    }
 );
 
 
-function startHostGame() {
+/* =========================================================
+   PASSWORD
+   ========================================================= */
 
-    gameStarted = true;
+passwordBtn.addEventListener(
+    "click",
+    checkPassword
+);
 
-    currentQuestion = 0;
 
-    resetTeams();
+passwordInput.addEventListener(
+    "keydown",
+    event => {
 
-    showScreen(quizScreen);
+        if (
+            event.key === "Enter"
+        ) {
+
+            checkPassword();
+
+        }
+
+    }
+);
+
+
+function checkPassword() {
+
+    const enteredPassword =
+        passwordInput.value;
+
+
+    if (
+        enteredPassword ===
+        HOST_PASSWORD
+    ) {
+
+        passwordError.textContent = "";
+
+        showScreen(roundScreen);
+
+    }
+
+    else {
+
+        passwordError.textContent =
+            "❌ Incorrect host password.";
+
+        passwordInput.value = "";
+
+        passwordInput.focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   PASSWORD BACK
+   ========================================================= */
+
+passwordBackBtn.addEventListener(
+    "click",
+    () => {
+
+        showScreen(startScreen);
+
+    }
+);
+
+
+/* =========================================================
+   ROUND BACK
+   ========================================================= */
+
+roundBackBtn.addEventListener(
+    "click",
+    () => {
+
+        showScreen(startScreen);
+
+    }
+);
+
+
+/* =========================================================
+   ROUND BUTTONS
+   ========================================================= */
+
+document
+    .querySelectorAll(".round-btn")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const selectedRound =
+                    Number(
+                        button.dataset.round
+                    );
+
+                startSelectedRound(
+                    selectedRound
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   START SELECTED ROUND
+   ========================================================= */
+
+function startSelectedRound(
+    roundNumber
+) {
+
+    if (
+        !roundQuestions[roundNumber]
+    ) {
+
+        return;
+
+    }
+
+
+    currentRound =
+        roundNumber;
+
+
+    questions =
+        roundQuestions[currentRound];
+
+
+    currentQuestion =
+        0;
+
+
+    resetRoundScores();
+
+
+    gameStarted =
+        true;
+
+
+    showScreen(
+        quizScreen
+    );
+
+
+    currentRoundDisplay.textContent =
+        currentRound;
+
 
     createHostPeer();
 
+
     showQuestion();
+
+}
+
+
+/* =========================================================
+   RESET ROUND SCORES
+   ========================================================= */
+
+function resetRoundScores() {
+
+    Object.keys(teams)
+        .forEach(teamKey => {
+
+            teams[teamKey].score =
+                0;
+
+            teams[teamKey].hearts =
+                STARTING_HEARTS;
+
+        });
+
+
+    updateScoreboard();
 
 }
 
@@ -477,15 +1134,16 @@ phoneModeBtn.addEventListener(
 
 
 /* =========================================================
-   RESET TEAMS
+   RESET TEAMS CONNECTION STATE
    ========================================================= */
 
 function resetTeams() {
 
-    Object.keys(teams).forEach(
-        teamKey => {
+    Object.keys(teams)
+        .forEach(teamKey => {
 
-            teams[teamKey].score = 0;
+            teams[teamKey].score =
+                0;
 
             teams[teamKey].hearts =
                 STARTING_HEARTS;
@@ -496,8 +1154,8 @@ function resetTeams() {
             teams[teamKey].connected =
                 false;
 
-        }
-    );
+        });
+
 
     updateScoreboard();
 
@@ -509,6 +1167,18 @@ function resetTeams() {
    ========================================================= */
 
 function createHostPeer() {
+
+    /*
+        Don't create a second PeerJS host
+        if one already exists.
+    */
+
+    if (peer) {
+
+        return;
+
+    }
+
 
     peer = new Peer();
 
@@ -581,8 +1251,8 @@ function setupTeamConnection(
         "close",
         () => {
 
-            Object.keys(teams).forEach(
-                teamKey => {
+            Object.keys(teams)
+                .forEach(teamKey => {
 
                     if (
                         teams[teamKey]
@@ -598,8 +1268,8 @@ function setupTeamConnection(
 
                     }
 
-                }
-            );
+                });
+
 
             updateScoreboard();
 
@@ -618,7 +1288,11 @@ function handlePhoneMessage(
     connection
 ) {
 
-    if (!data) return;
+    if (!data) {
+
+        return;
+
+    }
 
 
     /* PHONE IDENTIFICATION */
@@ -632,7 +1306,9 @@ function handlePhoneMessage(
             data.team;
 
 
-        if (!teams[teamKey]) {
+        if (
+            !teams[teamKey]
+        ) {
 
             connection.send({
 
@@ -648,16 +1324,25 @@ function handlePhoneMessage(
         }
 
 
-        teams[teamKey].connection =
+        /*
+            If another phone is already
+            connected to this team,
+            replace its connection.
+        */
+
+        teams[teamKey]
+            .connection =
             connection;
 
-        teams[teamKey].connected =
+        teams[teamKey]
+            .connected =
             true;
 
 
         connection.send({
 
-            type: "connected",
+            type:
+                "connected",
 
             team:
                 teamKey,
@@ -724,8 +1409,36 @@ function connectPhone() {
         "Connecting...";
 
 
+    /*
+        Close previous connection
+        if the phone reconnects.
+    */
+
+    if (
+        window.phonePeer
+    ) {
+
+        try {
+
+            window.phonePeer.destroy();
+
+        }
+
+        catch (error) {
+
+            console.warn(error);
+
+        }
+
+    }
+
+
     const phonePeer =
         new Peer();
+
+
+    window.phonePeer =
+        phonePeer;
 
 
     phonePeer.on(
@@ -738,13 +1451,18 @@ function connectPhone() {
                 );
 
 
+            window.phoneConnection =
+                connection;
+
+
             connection.on(
                 "open",
                 () => {
 
                     connection.send({
 
-                        type: "identify",
+                        type:
+                            "identify",
 
                         team:
                             selectedTeam
@@ -777,6 +1495,9 @@ function connectPhone() {
                     phoneBuzzBtn.disabled =
                         true;
 
+                    window.phoneConnection =
+                        null;
+
                 }
             );
 
@@ -788,17 +1509,15 @@ function connectPhone() {
         "error",
         error => {
 
-            console.error(error);
+            console.error(
+                error
+            );
 
             phoneStatus.textContent =
                 "Could not connect to host.";
 
         }
     );
-
-
-    window.phonePeer =
-        phonePeer;
 
 }
 
@@ -910,7 +1629,7 @@ phoneBuzzBtn.addEventListener(
 
 
         if (
-            !window.phonePeer
+            !window.phoneConnection
         ) {
 
             return;
@@ -918,66 +1637,14 @@ phoneBuzzBtn.addEventListener(
         }
 
 
-        /*
-            Find connection created during join.
-            PeerJS connection is stored globally below.
-        */
-
         if (
-            !window.phoneConnection
+            window.phoneConnection.open
         ) {
-
-            /*
-                Recreate connection if necessary.
-            */
-
-            const hostId =
-                hostIdInput.value.trim();
-
-
-            const connection =
-                window.phonePeer.connect(
-                    hostId
-                );
-
-
-            window.phoneConnection =
-                connection;
-
-
-            connection.on(
-                "open",
-                () => {
-
-                    connection.send({
-
-                        type: "identify",
-
-                        team:
-                            selectedTeam
-
-                    });
-
-
-                    connection.send({
-
-                        type: "buzz",
-
-                        team:
-                            selectedTeam
-
-                    });
-
-                }
-            );
-
-        }
-
-        else {
 
             window.phoneConnection.send({
 
-                type: "buzz",
+                type:
+                    "buzz",
 
                 team:
                     selectedTeam
@@ -1023,7 +1690,9 @@ function teamBuzz(
         FIRST TEAM ONLY
     */
 
-    if (activeTeam !== null) {
+    if (
+        activeTeam !== null
+    ) {
 
         sendBuzzResult(
             teamKey,
@@ -1040,16 +1709,12 @@ function teamBuzz(
 
 
     /*
-        Stop timer because team
-        has buzzed.
+        The first team buzz
+        stops the timer.
     */
 
     stopTimer();
 
-
-    /*
-        This was a before-time buzz.
-    */
 
     questionWasPassed =
         false;
@@ -1077,11 +1742,6 @@ function teamBuzz(
     );
 
 
-    /*
-        Tell all other phones that
-        the buzzer is closed.
-    */
-
     notifyPhonesBuzzClosed();
 
 }
@@ -1108,15 +1768,21 @@ function sendBuzzResult(
     }
 
 
-    connection.send({
+    if (
+        connection.open
+    ) {
 
-        type:
-            "buzz-result",
+        connection.send({
 
-        accepted:
-            accepted
+            type:
+                "buzz-result",
 
-    });
+            accepted:
+                accepted
+
+        });
+
+    }
 
 }
 
@@ -1135,7 +1801,10 @@ function notifyPhonesBuzzClosed() {
                     .connection;
 
 
-            if (connection) {
+            if (
+                connection &&
+                connection.open
+            ) {
 
                 connection.send({
 
@@ -1199,11 +1868,17 @@ function showQuestion() {
 
     stopTimer();
 
-    questionEnded = false;
+    questionEnded =
+        false;
 
-    activeTeam = null;
+    activeTeam =
+        null;
 
-    questionWasPassed = false;
+    questionWasPassed =
+        false;
+
+    answerAlreadyScored =
+        false;
 
 
     document
@@ -1232,6 +1907,10 @@ function showQuestion() {
 
     questionNumberElement.textContent =
         currentQuestion + 1;
+
+
+    currentRoundDisplay.textContent =
+        currentRound;
 
 
     categoryElement.textContent =
@@ -1274,9 +1953,9 @@ function showQuestion() {
             button.textContent =
                 String.fromCharCode(
                     65 + index
-                )
-                + ". "
-                + answer;
+                ) +
+                ". " +
+                answer;
 
 
             button.addEventListener(
@@ -1284,21 +1963,36 @@ function showQuestion() {
                 () => {
 
                     /*
-                        If no team has buzzed,
-                        host can still select
-                        an answer for testing.
+                        Answers can be clicked
+                        while the question is active.
+
+                        The first answer selected
+                        determines the score.
+
+                        Later clicks only show
+                        the correct/wrong color
+                        and do not change the score.
                     */
 
                     if (
-                        activeTeam
+                        !activeTeam
                     ) {
 
-                        selectAnswer(
-                            index,
-                            activeTeam
-                        );
+                        feedbackElement.textContent =
+                            "⚠️ A team must buzz first.";
+
+                        feedbackElement.className =
+                            "feedback wrong-text";
+
+                        return;
 
                     }
+
+
+                    markAnswer(
+                        index,
+                        activeTeam
+                    );
 
                 }
             );
@@ -1314,8 +2008,216 @@ function showQuestion() {
 
     resetTimer();
 
-
     notifyPhonesNewQuestion();
+
+}
+
+
+/* =========================================================
+   MARK ANSWER
+   ========================================================= */
+
+function markAnswer(
+    selectedIndex,
+    teamKey
+) {
+
+    if (
+        questionEnded
+    ) {
+
+        return;
+
+    }
+
+
+    const q =
+        questions[currentQuestion];
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".answer-btn"
+        );
+
+
+    /*
+        Immediately show selected
+        answer as green or red.
+    */
+
+    if (
+        selectedIndex ===
+        q.correct
+    ) {
+
+        buttons[selectedIndex]
+            .classList.add(
+                "correct"
+            );
+
+    }
+
+    else {
+
+        buttons[selectedIndex]
+            .classList.add(
+                "wrong"
+            );
+
+        buttons[q.correct]
+            .classList.add(
+                "correct"
+            );
+
+    }
+
+
+    /*
+        Score only once.
+    */
+
+    if (
+        answerAlreadyScored
+    ) {
+
+        feedbackElement.textContent =
+            selectedIndex === q.correct
+                ? "✓ Correct answer."
+                : "✗ Wrong answer.";
+
+        feedbackElement.className =
+            selectedIndex === q.correct
+                ? "feedback correct-text"
+                : "feedback wrong-text";
+
+        return;
+
+    }
+
+
+    answerAlreadyScored =
+        true;
+
+
+    /*
+        CORRECT
+    */
+
+    if (
+        selectedIndex ===
+        q.correct
+    ) {
+
+        let points;
+
+
+        if (
+            questionWasPassed
+        ) {
+
+            points =
+                CORRECT_AFTER_TIME;
+
+        }
+
+        else {
+
+            points =
+                CORRECT_BEFORE_TIME;
+
+        }
+
+
+        if (
+            teamKey &&
+            teams[teamKey]
+        ) {
+
+            teams[teamKey].score +=
+                points;
+
+            updateScoreboard();
+
+        }
+
+
+        feedbackElement.textContent =
+            "✓ " +
+            teams[teamKey].name +
+            " CORRECT! +" +
+            points +
+            " POINTS";
+
+
+        feedbackElement.className =
+            "feedback correct-text";
+
+    }
+
+
+    /*
+        WRONG
+    */
+
+    else {
+
+        if (
+            teamKey &&
+            teams[teamKey]
+        ) {
+
+            const team =
+                teams[teamKey];
+
+
+            if (
+                team.hearts > 0
+            ) {
+
+                team.hearts -=
+                    WRONG_HEART_PENALTY;
+
+
+                feedbackElement.textContent =
+                    "✗ WRONG! " +
+                    team.name +
+                    " loses ❤️";
+
+            }
+
+            else {
+
+                team.score -=
+                    WRONG_NO_HEART_PENALTY;
+
+
+                feedbackElement.textContent =
+                    "✗ WRONG! " +
+                    team.name +
+                    " loses -" +
+                    WRONG_NO_HEART_PENALTY +
+                    " POINTS";
+
+            }
+
+
+            updateScoreboard();
+
+        }
+
+        else {
+
+            feedbackElement.textContent =
+                "✗ WRONG!";
+
+        }
+
+
+        feedbackElement.className =
+            "feedback wrong-text";
+
+    }
 
 }
 
@@ -1332,14 +2234,22 @@ startTimerBtn.addEventListener(
 
 function startTimer() {
 
-    if (questionEnded) {
+    if (
+        questionEnded
+    ) {
 
         return;
 
     }
 
 
-    stopTimer();
+    if (
+        timerRunning
+    ) {
+
+        return;
+
+    }
 
 
     timerRunning =
@@ -1350,27 +2260,28 @@ function startTimer() {
         "RUNNING";
 
 
-    timer = setInterval(
-        () => {
+    timer =
+        setInterval(
+            () => {
 
-            timeLeft--;
+                timeLeft--;
 
-            updateTimer();
+                updateTimer();
 
 
-            if (
-                timeLeft <= 0
-            ) {
+                if (
+                    timeLeft <= 0
+                ) {
 
-                stopTimer();
+                    stopTimer();
 
-                timeExpired();
+                    timeExpired();
 
-            }
+                }
 
-        },
-        1000
-    );
+            },
+            1000
+        );
 
 }
 
@@ -1402,6 +2313,16 @@ function stopTimer() {
 
     timerRunning =
         false;
+
+
+    if (
+        !questionEnded
+    ) {
+
+        timerStatus.textContent =
+            "STOPPED";
+
+    }
 
 }
 
@@ -1455,7 +2376,9 @@ function updateTimer() {
 
 function timeExpired() {
 
-    if (questionEnded) {
+    if (
+        questionEnded
+    ) {
 
         return;
 
@@ -1472,10 +2395,6 @@ function timeExpired() {
 
     stopTimer();
 
-
-    /*
-        AUTOMATIC UNDERTAKER BELL
-    */
 
     playUndertakerBell();
 
@@ -1506,7 +2425,10 @@ function timeExpired() {
 
 
     nextBtn.textContent =
-        "NEXT QUESTION →";
+        currentQuestion ===
+        questions.length - 1
+            ? "FINISH ROUND →"
+            : "NEXT QUESTION →";
 
 
     notifyPhonesQuestionEnded();
@@ -1522,7 +2444,9 @@ endQuestionBtn.addEventListener(
     "click",
     () => {
 
-        if (!questionEnded) {
+        if (
+            !questionEnded
+        ) {
 
             timeExpired();
 
@@ -1530,215 +2454,6 @@ endQuestionBtn.addEventListener(
 
     }
 );
-
-
-/* =========================================================
-   SELECT ANSWER
-   ========================================================= */
-
-function selectAnswer(
-    selectedIndex,
-    teamKey
-) {
-
-    if (questionEnded) {
-
-        return;
-
-    }
-
-
-    questionEnded =
-        true;
-
-
-    stopTimer();
-
-
-    const q =
-        questions[currentQuestion];
-
-
-    const buttons =
-        document.querySelectorAll(
-            ".answer-btn"
-        );
-
-
-    buttons.forEach(
-        button => {
-
-            button.disabled =
-                true;
-
-        }
-    );
-
-
-    /*
-        CORRECT
-    */
-
-    if (
-        selectedIndex ===
-        q.correct
-    ) {
-
-        buttons[selectedIndex]
-            .classList.add(
-                "correct"
-            );
-
-
-        let points;
-
-
-        if (
-            questionWasPassed
-        ) {
-
-            points =
-                CORRECT_AFTER_TIME;
-
-        }
-
-        else {
-
-            points =
-                CORRECT_BEFORE_TIME;
-
-        }
-
-
-        if (
-            teamKey &&
-            teams[teamKey]
-        ) {
-
-            teams[teamKey].score +=
-                points;
-
-            updateScoreboard();
-
-        }
-
-
-        feedbackElement.textContent =
-            "✓ " +
-            (teamKey
-                ? teams[teamKey].name
-                : "TEAM") +
-            " CORRECT! +" +
-            points +
-            " POINTS";
-
-
-        feedbackElement.className =
-            "feedback correct-text";
-
-    }
-
-
-    /*
-        WRONG
-    */
-
-    else {
-
-        buttons[selectedIndex]
-            .classList.add(
-                "wrong"
-            );
-
-
-        buttons[q.correct]
-            .classList.add(
-                "correct"
-            );
-
-
-        if (
-            teamKey &&
-            teams[teamKey]
-        ) {
-
-            const team =
-                teams[teamKey];
-
-
-            /*
-                HEARTS REMAIN
-            */
-
-            if (
-                team.hearts > 0
-            ) {
-
-                team.hearts -=
-                    WRONG_HEART_PENALTY;
-
-
-                feedbackElement.textContent =
-                    "✗ WRONG! " +
-                    team.name +
-                    " loses ❤️";
-
-
-            }
-
-            /*
-                NO HEARTS
-            */
-
-            else {
-
-                team.score -=
-                    WRONG_NO_HEART_PENALTY;
-
-
-                feedbackElement.textContent =
-                    "✗ WRONG! " +
-                    team.name +
-                    " loses -" +
-                    WRONG_NO_HEART_PENALTY +
-                    " POINTS";
-
-            }
-
-
-            updateScoreboard();
-
-        }
-
-        else {
-
-            feedbackElement.textContent =
-                "✗ WRONG!";
-
-        }
-
-
-        feedbackElement.className =
-            "feedback wrong-text";
-
-    }
-
-
-    activeTeam =
-        null;
-
-
-    nextBtn.style.display =
-        "block";
-
-
-    nextBtn.textContent =
-        "NEXT QUESTION →";
-
-
-    notifyPhonesQuestionEnded();
-
-}
 
 
 /* =========================================================
@@ -1815,6 +2530,27 @@ nextBtn.addEventListener(
 
 
         showQuestion();
+
+    }
+);
+
+
+/* =========================================================
+   CHANGE ROUND
+   ========================================================= */
+
+changeRoundBtn.addEventListener(
+    "click",
+    () => {
+
+        stopTimer();
+
+        gameStarted =
+            false;
+
+        showScreen(
+            roundScreen
+        );
 
     }
 );
@@ -1922,7 +2658,10 @@ function notifyPhonesNewQuestion() {
                     .connection;
 
 
-            if (connection) {
+            if (
+                connection &&
+                connection.open
+            ) {
 
                 connection.send({
 
@@ -1952,7 +2691,10 @@ function notifyPhonesQuestionEnded() {
                     .connection;
 
 
-            if (connection) {
+            if (
+                connection &&
+                connection.open
+            ) {
 
                 connection.send({
 
@@ -2066,24 +2808,16 @@ function playSound(
    RESULTS
    ========================================================= */
 
-restartBtn.addEventListener(
-    "click",
-    () => {
-
-        showScreen(
-            startScreen
-        );
-
-    }
-);
-
-
 function showResults() {
 
     stopTimer();
 
     gameStarted =
         false;
+
+
+    resultRoundNumber.textContent =
+        currentRound;
 
 
     document.getElementById(
@@ -2135,7 +2869,7 @@ function showResults() {
     ).textContent =
         "🏆 " +
         teams[winner].name +
-        " WINS!";
+        " LEADS THIS ROUND!";
 
 
     showScreen(
@@ -2146,45 +2880,71 @@ function showResults() {
 
 
 /* =========================================================
+   NEXT ROUND
+   ========================================================= */
+
+nextRoundBtn.addEventListener(
+    "click",
+    () => {
+
+        showScreen(
+            roundScreen
+        );
+
+    }
+);
+
+
+/* =========================================================
+   RESTART
+   ========================================================= */
+
+restartBtn.addEventListener(
+    "click",
+    () => {
+
+        stopTimer();
+
+        gameStarted =
+            false;
+
+        currentQuestion =
+            0;
+
+        currentRound =
+            1;
+
+        questions =
+            roundQuestions[1];
+
+        resetTeams();
+
+        showScreen(
+            startScreen
+        );
+
+    }
+);
+
+
+/* =========================================================
    PUBLIC FUNCTIONS
-   =========================================================
-
-   These can also be used from the browser console
-   or future controls.
-
-   Example:
-
-       teamBuzz("team1");
-
-       hostStartTimer();
-
-       hostStopTimer();
-
-       hostResetTimer();
-
-       playMeme(4);
-
    ========================================================= */
 
 window.teamBuzz =
     teamBuzz;
 
-
 window.hostStartTimer =
     startTimer;
-
 
 window.hostStopTimer =
     stopTimer;
 
-
 window.hostResetTimer =
     resetTimer;
 
-
 window.hostEndQuestion =
     timeExpired;
-
 
 window.playMeme =
     playMeme;
@@ -2194,5 +2954,6 @@ window.playMeme =
    INITIAL STATE
    ========================================================= */
 
-updateScoreboard();
+resetTeams();
 
+updateTimer();
